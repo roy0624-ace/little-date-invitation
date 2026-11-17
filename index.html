@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#fff8f4">
+  <meta name="description" content="一份认真又有点可爱的约会邀请。">
+  <title>给你的一封小邀请</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #392d31;
+      --muted: #897b80;
+      --rose: #ef7487;
+      --rose-dark: #d95f76;
+      --cream: #fff8f4;
+      --line: #f1e3df;
+      --shadow: 0 24px 80px rgba(110, 67, 75, .12);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      padding: max(22px, env(safe-area-inset-top)) 18px max(22px, env(safe-area-inset-bottom));
+      overflow-x: hidden;
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background:
+        radial-gradient(ellipse at 12% 14%, rgba(255, 219, 220, .65), transparent 34%),
+        radial-gradient(ellipse at 89% 82%, rgba(255, 228, 198, .7), transparent 31%),
+        #fff8f4;
+    }
+    button, input { font: inherit; }
+    button { -webkit-tap-highlight-color: transparent; }
+    .scene { width: min(100%, 450px); position: relative; }
+    .sparkle { position: absolute; color: #efb25f; pointer-events: none; animation: twinkle 2.8s ease-in-out infinite; }
+    .sparkle.one { top: 26px; right: 12px; font-size: 24px; }
+    .sparkle.two { top: 138px; left: -5px; font-size: 17px; animation-delay: .8s; }
+    .sparkle.three { bottom: 80px; right: -3px; font-size: 20px; animation-delay: 1.4s; }
+    .card {
+      position: relative;
+      padding: 31px 25px 25px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.95);
+      border-radius: 30px;
+      background: rgba(255,255,255,.88);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      animation: arrive .65s cubic-bezier(.2,.8,.2,1) both;
+    }
+    .topline { display: flex; justify-content: space-between; align-items: center; }
+    .brand { display: flex; align-items: center; gap: 8px; color: #ad8183; font-size: 11px; font-weight: 750; letter-spacing: .19em; }
+    .brand-mark { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 9px; background: #fff0ed; color: var(--rose); font-size: 14px; letter-spacing: 0; }
+    .customize {
+      display: inline-flex; align-items: center; gap: 6px; padding: 8px 10px;
+      border: 0; border-radius: 999px; background: #fff5f2; color: #9e7278;
+      font-size: 12px; cursor: pointer; transition: background .2s, transform .2s;
+    }
+    .customize:hover { background: #ffebe7; transform: translateY(-1px); }
+    .illustration { height: 142px; display: grid; place-items: center; position: relative; margin: 13px 0 1px; }
+    .halo { position: absolute; width: 124px; height: 124px; border-radius: 50%; background: linear-gradient(145deg, #ffedf0, #fff6e8); }
+    .envelope { position: relative; display: grid; place-items: center; width: 112px; height: 83px; margin-top: 20px; border: 1px solid #f5d9d3; border-radius: 15px; background: linear-gradient(145deg, #fff 10%, #fff2ed); box-shadow: 0 12px 25px rgba(201, 129, 126, .16); transform: rotate(-5deg); }
+    .envelope::before { content: ""; position: absolute; top: -14px; left: 25px; width: 61px; height: 61px; border-radius: 9px 9px 2px 2px; background: linear-gradient(135deg, #ffdee2, #f5aeba); transform: rotate(45deg); z-index: -1; }
+    .letter { position: absolute; top: -18px; z-index: 1; display: grid; place-items: center; width: 75px; height: 58px; border-radius: 9px; background: #fffdfa; box-shadow: 0 4px 10px rgba(154, 105, 104, .1); font-size: 25px; animation: float 3s ease-in-out infinite; }
+    .heart { position: absolute; right: 57px; top: 16px; color: #e87989; font-size: 20px; animation: heartbeat 1.8s ease-in-out infinite; }
+    .mini-star { position: absolute; left: 58px; bottom: 14px; color: #e6b765; font-size: 16px; }
+    .intro { text-align: center; }
+    .eyebrow { margin: 0 0 10px; color: #b28b88; font-size: 11px; font-weight: 700; letter-spacing: .2em; }
+    h1 { margin: 0; font-size: clamp(28px, 8vw, 36px); line-height: 1.32; letter-spacing: -.045em; font-weight: 780; }
+    h1 .name { color: var(--rose-dark); }
+    .subtitle { margin: 10px 0 0; color: var(--muted); font-size: 14px; line-height: 1.75; }
+    .note {
+      margin: 22px 0 19px; padding: 17px 17px 15px; border: 1px solid #f4e9e3;
+      border-radius: 18px; background: #fffaf7;
+    }
+    .note-head { display: flex; align-items: center; gap: 7px; margin-bottom: 12px; color: #a87c76; font-size: 11px; font-weight: 750; letter-spacing: .1em; }
+    .note-head span { color: #eaa278; font-size: 14px; }
+    .plan { margin: 0; font-size: 15px; font-weight: 680; line-height: 1.55; }
+    .when { display: flex; align-items: center; gap: 7px; margin-top: 8px; color: var(--muted); font-size: 12px; }
+    .question { margin: 0 0 13px; text-align: center; font-size: 14px; font-weight: 670; }
+    .actions { display: grid; gap: 10px; }
+    .yes {
+      min-height: 52px; width: 100%; border: 0; border-radius: 15px; color: white;
+      background: linear-gradient(100deg, #ef7e8c, #ec6f82); box-shadow: 0 8px 18px rgba(220, 103, 124, .24);
+      font-weight: 730; cursor: pointer; transition: transform .18s, box-shadow .18s;
+    }
+    .yes:hover { transform: translateY(-2px); box-shadow: 0 11px 23px rgba(220, 103, 124, .28); }
+    .yes:active { transform: scale(.985); }
+    .no {
+      display: block; min-height: 45px; width: min(100%, 240px); margin: 10px auto 0; justify-self: center; border: 1px solid #efe5e3;
+      border-radius: 14px; background: #fff; color: #887c80; font-size: 13px; cursor: pointer;
+      transition: transform .26s cubic-bezier(.2,.8,.2,1), background .2s, color .2s;
+    }
+    .no:hover { background: #fff7f5; color: #785f65; }
+    .decline-link { display: block; margin: 12px auto 0; padding: 5px; border: 0; background: transparent; color: #a09195; font-size: 11px; text-decoration: underline; text-decoration-color: #d9c9cc; text-underline-offset: 3px; cursor: pointer; }
+    .toast { min-height: 23px; margin: 7px 0 0; text-align: center; color: #cb7180; font-size: 12px; }
+    .footer { margin: 17px 0 0; text-align: center; color: #b2a2a4; font-size: 10px; letter-spacing: .04em; }
+    .result { display: none; padding: 34px 4px 20px; text-align: center; animation: arrive .4s ease both; }
+    .result.show { display: block; }
+    .result-mark { display: grid; place-items: center; width: 84px; height: 84px; margin: 0 auto 19px; border-radius: 50%; background: #fff0ee; font-size: 39px; animation: pop .55s cubic-bezier(.18,.89,.32,1.28) both; }
+    .result h2 { margin: 0; font-size: 26px; letter-spacing: -.04em; }
+    .result p { margin: 12px auto 22px; max-width: 290px; color: var(--muted); font-size: 14px; line-height: 1.75; }
+    .result .yes { margin-top: 3px; }
+    .fineprint { margin: 12px 0 0 !important; color: #aa9a9e !important; font-size: 11px !important; }
+    dialog { width: min(calc(100% - 30px), 390px); padding: 0; border: 0; border-radius: 24px; color: var(--ink); box-shadow: 0 25px 80px rgba(74, 42, 51, .22); }
+    dialog::backdrop { background: rgba(58, 42, 46, .3); backdrop-filter: blur(3px); }
+    .dialog-inner { padding: 25px; }
+    .dialog-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 7px; }
+    .dialog-top h2 { margin: 0; font-size: 20px; }
+    .close { display: grid; place-items: center; width: 32px; height: 32px; border: 0; border-radius: 50%; background: #fff4f1; color: #93787a; font-size: 18px; cursor: pointer; }
+    .dialog-desc { margin: 0 0 19px; color: var(--muted); font-size: 12px; line-height: 1.65; }
+    label { display: block; margin: 13px 0 6px; color: #6f5b60; font-size: 12px; font-weight: 650; }
+    input { width: 100%; min-height: 44px; padding: 0 12px; border: 1px solid #eee2df; border-radius: 12px; outline: none; color: var(--ink); background: #fffdfc; font-size: 14px; }
+    input:focus { border-color: #efa2a8; box-shadow: 0 0 0 3px #fff0ef; }
+    .dialog-action { width: 100%; margin-top: 19px; }
+    .generated { display: none; margin-top: 13px; padding: 12px; border-radius: 12px; background: #f8f4f2; color: #75696d; font-size: 11px; line-height: 1.6; word-break: break-all; }
+    .generated.show { display: block; }
+    .generated strong { display: block; margin-bottom: 4px; color: #66535a; font-size: 12px; }
+    .secondary { width: 100%; min-height: 45px; margin-top: 9px; border: 1px solid #eee2df; border-radius: 13px; background: white; color: #726369; font-size: 13px; cursor: pointer; }
+    .secondary:hover { background: #fff8f5; }
+    .decline-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-top: 19px; }
+    .decline-actions .yes, .decline-actions .secondary { min-height: 46px; margin: 0; }
+    .cover-note { margin: 18px 0 17px; padding: 16px; border: 1px solid #f4e9e3; border-radius: 18px; background: #fffaf7; }
+    .cover-note .note-head { margin-bottom: 7px; }
+    .cover-note .plan { font-size: 14px; }
+    .teaser-picks { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+    .teaser-chip { padding: 7px 10px; border: 1px solid #f0e4e0; border-radius: 999px; color: #927c7e; background: white; font-size: 11px; }
+    .planner { margin-top: 2px; animation: arrive .35s ease both; }
+    .planner-head { margin: 21px 0 19px; }
+    .step-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; color: #ad8986; font-size: 10px; font-weight: 750; letter-spacing: .13em; }
+    .progress-track { height: 5px; overflow: hidden; border-radius: 999px; background: #f8e9e5; }
+    .progress-fill { width: 25%; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #f2a0a2, #ec7184); transition: width .35s ease; }
+    .step-title { margin: 0; font-size: 24px; line-height: 1.3; letter-spacing: -.04em; }
+    .step-subtitle { margin: 7px 0 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+    .planner-step { display: none; animation: arrive .26s ease both; }
+    .planner-step.active { display: block; }
+    .choice-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 9px; }
+    .choice-card { min-height: 77px; display: flex; align-items: center; gap: 9px; position: relative; padding: 11px 10px; text-align: left; border: 1px solid #f0e6e2; border-radius: 15px; background: #fff; color: var(--ink); cursor: pointer; transition: transform .16s, border-color .16s, background .16s, box-shadow .16s; }
+    .choice-card:hover { transform: translateY(-2px); border-color: #f2c6c2; }
+    .choice-card.selected { border-color: #eb8993; background: #fff5f3; box-shadow: 0 0 0 2px rgba(235,137,147,.12); }
+    .choice-icon { flex: 0 0 31px; display: grid; place-items: center; width: 31px; height: 31px; border-radius: 10px; background: #fff2ed; font-size: 17px; }
+    .choice-copy { min-width: 0; display: grid; gap: 3px; }
+    .choice-copy strong { font-size: 12px; line-height: 1.3; }
+    .choice-copy small { color: #9b8c8e; font-size: 10px; line-height: 1.3; }
+    .choice-check { position: absolute; top: 6px; right: 8px; color: var(--rose-dark); font-size: 12px; opacity: 0; }
+    .choice-card.selected .choice-check { opacity: 1; }
+    .custom-choice { display: flex; gap: 8px; margin-top: 11px; }
+    .custom-choice input { min-width: 0; min-height: 43px; font-size: 12px; }
+    .custom-choice button { flex: 0 0 auto; padding: 0 12px; border: 1px solid #f0e2df; border-radius: 12px; background: #fff8f5; color: #956c73; font-size: 12px; cursor: pointer; }
+    .step-nav { display: flex; gap: 9px; margin-top: 17px; }
+    .step-nav .secondary, .step-nav .yes { min-height: 48px; margin: 0; }
+    .step-nav .secondary { flex: 0 0 37%; width: auto; }
+    .step-nav .yes { flex: 1; }
+    .plan-summary { display: grid; gap: 9px; margin: 16px 0; }
+    .summary-row { display: grid; grid-template-columns: 68px 1fr auto; align-items: center; gap: 8px; padding: 12px 13px; border: 1px solid #f1e7e3; border-radius: 14px; background: #fffaf7; }
+    .summary-label { color: #a38481; font-size: 11px; font-weight: 700; }
+    .summary-value { font-size: 12px; font-weight: 650; line-height: 1.5; }
+    .summary-edit { padding: 5px 7px; border: 0; border-radius: 8px; background: #fff; color: #a0787d; font-size: 10px; cursor: pointer; }
+    .review-question { margin: 16px 0 11px; text-align: center; font-size: 13px; font-weight: 700; }
+    .review-actions { display: grid; gap: 9px; }
+    .review-actions .no { width: min(100%, 240px); min-height: 44px; justify-self: center; }
+    .back-to-invite { display: block; margin: 14px auto 0; padding: 5px; border: 0; background: transparent; color: #9b898e; font-size: 11px; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+    .confetti { position: fixed; z-index: 5; top: -18px; width: 9px; height: 13px; border-radius: 3px; pointer-events: none; animation: fall var(--duration) linear forwards; }
+    @keyframes arrive { from { opacity: 0; transform: translateY(12px) scale(.985); } to { opacity: 1; transform: none; } }
+    @keyframes float { 0%,100% { transform: translateY(0) rotate(1deg); } 50% { transform: translateY(-5px) rotate(-1deg); } }
+    @keyframes heartbeat { 0%,100% { transform: scale(1); } 12% { transform: scale(1.18); } 24% { transform: scale(1); } 36% { transform: scale(1.13); } }
+    @keyframes twinkle { 0%,100% { opacity: .48; transform: scale(.9) rotate(-7deg); } 50% { opacity: 1; transform: scale(1.13) rotate(8deg); } }
+    @keyframes pop { from { opacity: 0; transform: scale(.45) rotate(-15deg); } to { opacity: 1; transform: scale(1) rotate(0); } }
+    @keyframes fall { to { transform: translate3d(var(--drift), 110svh, 0) rotate(700deg); opacity: .85; } }
+    @media (max-width: 390px) { .card { padding: 24px 19px 21px; border-radius: 25px; } .illustration { height: 126px; margin-top: 10px; } .note { margin-top: 19px; } .choice-card { min-height: 73px; gap: 7px; padding: 9px 8px; } .choice-icon { flex-basis: 28px; width: 28px; height: 28px; font-size: 15px; } }
+    @media (max-height: 790px) { body { align-items: start; } .scene { margin-top: 14px; margin-bottom: 14px; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+  </style>
+</head>
+<body>
+  <main class="scene">
+    <span class="sparkle one" aria-hidden="true">✦</span>
+    <span class="sparkle two" aria-hidden="true">✧</span>
+    <span class="sparkle three" aria-hidden="true">✦</span>
+    <section class="card" aria-live="polite">
+      <div id="inviteView">
+        <div class="topline">
+          <div class="brand"><span class="brand-mark">♡</span> A LITTLE DATE</div>
+          <button class="customize" id="openEdit" type="button" aria-label="定制邀请内容">✎ <span>定制邀请</span></button>
+        </div>
+        <div class="illustration" aria-hidden="true">
+          <div class="halo"></div><div class="envelope"><div class="letter">💌</div></div>
+          <span class="heart">♥</span><span class="mini-star">✦</span>
+        </div>
+        <div class="intro">
+          <p class="eyebrow">一场由你参与策划的小约会</p>
+          <h1><span id="toName" class="name">亲爱的你</span><br>来一起选约会计划吧？</h1>
+          <p class="subtitle">去哪儿、吃什么都可以慢慢挑<br>我最期待的是和你一起。</p>
+        </div>
+        <div class="cover-note">
+          <div class="note-head"><span>✦</span> TA 的小心意</div>
+          <p id="planText" class="plan">想认真邀请你，和我一起度过一个好天气。</p>
+          <div class="when"><span aria-hidden="true">◷</span><span id="whenText">时间地点，我们一起决定</span></div>
+          <div class="teaser-picks"><span class="teaser-chip">☕ 约会活动你来选</span><span class="teaser-chip">🍽️ 晚餐口味也你定</span></div>
+        </div>
+        <button class="yes" id="startPlan" type="button">开始挑选约会计划 ♡</button>
+        <button class="no" id="noButtonCover" type="button">拒绝</button>
+        <p class="toast" id="coverToast" aria-live="polite"></p>
+        <button class="decline-link" id="declineLink" type="button">如果不方便，也可以认真告诉我</button>
+        <p class="footer">MADE WITH A LITTLE COURAGE & A LOT OF HEART</p>
+      </div>
+
+      <div id="plannerView" class="planner" hidden>
+        <div class="topline">
+          <div class="brand"><span class="brand-mark">♡</span> OUR DATE PLAN</div>
+          <button class="customize" id="openEditPlanner" type="button">✎ <span>邀请信息</span></button>
+        </div>
+        <div class="planner-head">
+          <div class="step-meta"><span id="stepLabel">STEP 01 · 活动</span><span id="stepCounter">01 / 04</span></div>
+          <div class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
+        </div>
+        <p class="toast" id="toast" aria-live="polite"></p>
+
+        <section class="planner-step active" data-step="0" aria-labelledby="activityTitle">
+          <h2 id="activityTitle" class="step-title">想和我去做什么？</h2>
+          <p class="step-subtitle">选一个你喜欢的活动，也可以写下自己的主意。</p>
+          <div id="activityGrid" class="choice-grid" role="group" aria-label="选择约会活动"></div>
+          <div class="custom-choice"><input id="activityCustom" maxlength="40" placeholder="或者写一个自己的想法"><button id="useActivityCustom" type="button">用这个想法</button></div>
+          <div class="step-nav"><button class="secondary" data-back type="button">返回邀请</button><button class="yes" data-next type="button">下一步：选晚餐 →</button></div>
+          <button class="decline-link" data-decline type="button">如果不方便，也可以认真告诉我</button>
+        </section>
+
+        <section class="planner-step" data-step="1" aria-labelledby="cuisineTitle">
+          <h2 id="cuisineTitle" class="step-title">晚餐想吃什么？</h2>
+          <p class="step-subtitle">中餐、西餐或其他口味，挑一个今天最想吃的。</p>
+          <div id="cuisineGrid" class="choice-grid" role="group" aria-label="选择晚餐菜系"></div>
+          <div class="step-nav"><button class="secondary" data-back type="button">← 上一步</button><button class="yes" data-next type="button">下一步：挑口味 →</button></div>
+          <button class="decline-link" data-decline type="button">如果不方便，也可以认真告诉我</button>
+        </section>
+
+        <section class="planner-step" data-step="2" aria-labelledby="dishTitle">
+          <h2 id="dishTitle" class="step-title">再挑一点喜欢的</h2>
+          <p class="step-subtitle" id="dishSubtitle">选细分类目，也可以把选择权交给对方。</p>
+          <div id="dishGrid" class="choice-grid" role="group" aria-label="选择晚餐细分类目"></div>
+          <div class="custom-choice"><input id="dishCustom" maxlength="40" placeholder="或者写下具体想吃的"><button id="useDishCustom" type="button">用这个想法</button></div>
+          <div class="step-nav"><button class="secondary" data-back type="button">← 上一步</button><button class="yes" data-next type="button">看看我们的计划 →</button></div>
+          <button class="decline-link" data-decline type="button">如果不方便，也可以认真告诉我</button>
+        </section>
+
+        <section class="planner-step" data-step="3" aria-labelledby="reviewTitle">
+          <h2 id="reviewTitle" class="step-title">这就是我们的约会计划</h2>
+          <p class="step-subtitle">计划可以再改；你愿意和我一起去吗？</p>
+          <div class="plan-summary">
+            <div class="summary-row"><span class="summary-label">约会活动</span><span id="summaryActivity" class="summary-value"></span><button class="summary-edit" type="button" data-jump="0">修改</button></div>
+            <div class="summary-row"><span class="summary-label">晚餐菜系</span><span id="summaryCuisine" class="summary-value"></span><button class="summary-edit" type="button" data-jump="1">修改</button></div>
+            <div class="summary-row"><span class="summary-label">具体口味</span><span id="summaryDish" class="summary-value"></span><button class="summary-edit" type="button" data-jump="2">修改</button></div>
+            <div class="summary-row" id="summaryWhenRow"><span class="summary-label">时间备注</span><span id="summaryWhen" class="summary-value"></span><button class="summary-edit" type="button" id="editWhen">修改</button></div>
+          </div>
+          <p class="review-question">那么，愿意和我约会吗？</p>
+          <div class="review-actions">
+            <button class="yes" id="yesButton" type="button">好呀，和你约会 ♡</button>
+            <button class="no" id="noButton" type="button">拒绝</button>
+          </div>
+          <button class="decline-link" id="declineLinkPlanner" type="button">如果不方便，也可以认真告诉我</button>
+          <button class="back-to-invite" id="backToInvite" type="button">返回邀请卡</button>
+        </section>
+        <p class="footer">TAKE YOUR TIME · PICK WHAT YOU LIKE</p>
+      </div>
+      <div id="resultView" class="result" aria-live="polite">
+        <div id="resultMark" class="result-mark">💗</div>
+        <p id="resultEyebrow" class="eyebrow">今晚的好消息</p>
+        <h2 id="resultTitle">太好啦！</h2>
+        <p id="resultText"></p>
+        <button id="resultAction" class="yes" type="button">复制回复，告诉对方 ♡</button>
+        <p class="fineprint" id="resultFineprint">这份邀请在你的手机里打开；复制后发给邀请你的人，就能告诉 TA 你的答案。</p>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="editDialog" aria-labelledby="editTitle">
+    <form class="dialog-inner" id="editForm">
+      <div class="dialog-top"><h2 id="editTitle">把邀请写成你的样子</h2><button type="button" class="close" data-close="editDialog" aria-label="关闭">×</button></div>
+      <p class="dialog-desc">填好称呼和邀请附言，生成链接后复制到微信发给对方。信息只会写进链接，不会上传。</p>
+      <label for="toInput">对方怎么称呼你</label><input id="toInput" maxlength="24" placeholder="比如：小林">
+      <label for="fromInput">你的名字或昵称</label><input id="fromInput" maxlength="24" placeholder="比如：阿泽">
+      <label for="planInput">想对对方说什么</label><input id="planInput" maxlength="60" placeholder="比如：想和你一起度过一个好天气">
+      <label for="whenInput">时间或小备注</label><input id="whenInput" maxlength="50" placeholder="比如：这个周末，具体听你的">
+      <button class="yes dialog-action" type="submit">生成专属邀请链接 ♡</button>
+      <div class="generated" id="generatedBox" aria-live="polite"></div>
+      <button class="secondary" type="button" id="copyLink" hidden>复制链接</button>
+    </form>
+  </dialog>
+
+  <dialog id="declineDialog" aria-labelledby="declineTitle">
+    <div class="dialog-inner">
+      <div class="dialog-top"><h2 id="declineTitle">想认真拒绝这次邀请吗？</h2><button type="button" class="close" data-close="declineDialog" aria-label="关闭">×</button></div>
+      <p class="dialog-desc">没关系，你的真实想法更重要。告诉对方后，这份邀请就会好好收下你的答案。</p>
+      <div class="decline-actions"><button class="secondary" type="button" data-close="declineDialog">再想一下</button><button class="yes" type="button" id="confirmDecline">认真拒绝</button></div>
+    </div>
+  </dialog>
+
+  <script>
+    (() => {
+      const params = new URLSearchParams(location.search);
+      const invite = {
+        to: params.get('to') || '',
+        from: params.get('from') || '',
+        plan: params.get('plan') || '',
+        when: params.get('when') || ''
+      };
+      const $ = (id) => document.getElementById(id);
+      const editDialog = $('editDialog');
+      const declineDialog = $('declineDialog');
+      const inviteView = $('inviteView');
+      const plannerView = $('plannerView');
+      const resultView = $('resultView');
+      const picks = { activity: '', cuisine: '', dish: '' };
+      let step = 0;
+      let refusals = 0;
+
+      const activities = [
+        { icon: '☕', title: '咖啡店坐坐', note: '找家舒服的小店' },
+        { icon: '🎬', title: '一起看电影', note: '选一部喜欢的片' },
+        { icon: '🌳', title: '公园散散步', note: '慢慢走，慢慢聊' },
+        { icon: '🚗', title: '来一场自驾游', note: '沿途风景也很浪漫' },
+        { icon: '🧺', title: '草地野餐', note: '带点零食晒晒太阳' },
+        { icon: '🖼️', title: '看展或逛博物馆', note: '一起发现新灵感' },
+        { icon: '📚', title: '逛书店', note: '挑一本喜欢的书' },
+        { icon: '🎲', title: '桌游或密室', note: '来点轻松的小挑战' }
+      ];
+      const cuisines = [
+        { icon: '🥢', title: '中餐', note: '各地风味都安排' },
+        { icon: '🍝', title: '西餐', note: '牛排、意面、披萨' },
+        { icon: '🍣', title: '日料', note: '寿司、拉面和居酒屋' },
+        { icon: '🍗', title: '韩餐', note: '烤肉、炸鸡、拌饭' },
+        { icon: '🍲', title: '火锅', note: '热气腾腾一起涮' },
+        { icon: '🔥', title: '烧烤', note: '烤串或韩式烤肉' },
+        { icon: '🍰', title: '甜品 / 轻食', note: '下午茶也很不错' },
+        { icon: '✨', title: '都听你的', note: '给我一个小惊喜' }
+      ];
+      const dishes = {
+        '中餐': [
+          { icon: '🌶️', title: '川菜', note: '麻辣鲜香' },
+          { icon: '🦐', title: '粤菜', note: '清淡鲜美' },
+          { icon: '🥘', title: '湘菜', note: '香辣下饭' },
+          { icon: '🍡', title: '江浙菜', note: '清甜精致' },
+          { icon: '🥟', title: '东北菜', note: '热乎又实在' },
+          { icon: '🍜', title: '面馆 / 小吃', note: '简单吃也开心' },
+          { icon: '✨', title: '都可以', note: '看当天心情决定' }
+        ],
+        '西餐': [
+          { icon: '🥩', title: '牛排馆', note: '好好吃顿正餐' },
+          { icon: '🍝', title: '意面', note: '经典意式风味' },
+          { icon: '🍕', title: '披萨', note: '分着吃更开心' },
+          { icon: '🍔', title: '汉堡', note: '轻松不拘束' },
+          { icon: '🥗', title: '法式小馆 / Brunch', note: '慢慢享受一餐' },
+          { icon: '✨', title: '都可以', note: '看当天心情决定' }
+        ],
+        '日料': [
+          { icon: '🍣', title: '寿司 / 刺身', note: '清爽鲜美' },
+          { icon: '🍜', title: '拉面', note: '暖暖地吃一碗' },
+          { icon: '🍢', title: '居酒屋', note: '小菜慢聊' },
+          { icon: '🍱', title: '日式定食', note: '一份刚刚好' },
+          { icon: '✨', title: '都可以', note: '看当天心情决定' }
+        ],
+        '韩餐': [
+          { icon: '🥓', title: '韩式烤肉', note: '一起烤、一起吃' },
+          { icon: '🍗', title: '韩式炸鸡', note: '配上喜欢的饮料' },
+          { icon: '🍲', title: '部队锅', note: '热乎又有满足感' },
+          { icon: '🍚', title: '石锅拌饭', note: '香香的一锅' },
+          { icon: '✨', title: '都可以', note: '看当天心情决定' }
+        ],
+        '火锅': [
+          { icon: '🌶️', title: '川味麻辣锅', note: '够味过瘾' },
+          { icon: '🍅', title: '番茄锅', note: '酸甜暖胃' },
+          { icon: '🍄', title: '菌菇锅', note: '清鲜温和' },
+          { icon: '🥥', title: '椰子鸡锅', note: '鲜甜清爽' },
+          { icon: '✨', title: '都可以', note: '看当天心情决定' }
+        ],
+        '烧烤': [
+          { icon: '🥓', title: '韩式烤肉', note: '生菜包肉很满足' },
+          { icon: '🍢', title: '中式烤串', note: '烟火气十足' },
+          { icon: '🦐', title: '海鲜烧烤', note: '鲜味满满' },
+          { icon: '🥩', title: '西式炭烤', note: '慢烤肉香' },
+          { icon: '✨', title: '都可以', note: '看当天心情决定' }
+        ],
+        '甜品 / 轻食': [
+          { icon: '🫖', title: '下午茶', note: '蛋糕配茶或咖啡' },
+          { icon: '🥐', title: '面包甜点', note: '去喜欢的烘焙店' },
+          { icon: '🍨', title: '冰淇淋 / 芭菲', note: '饭后甜甜收尾' },
+          { icon: '🥗', title: '沙拉轻食', note: '清爽不负担' },
+          { icon: '✨', title: '都可以', note: '看当天心情决定' }
+        ],
+        '都听你的': [
+          { icon: '🎁', title: '给我一个惊喜', note: '今天由你来安排' },
+          { icon: '📍', title: '找附近人气店', note: '选一家评价不错的' },
+          { icon: '💬', title: '到时再商量', note: '一起边走边决定' }
+        ]
+      };
+
+      function render() {
+        $('toName').textContent = invite.to ? `亲爱的 ${invite.to}` : '亲爱的你';
+        $('planText').textContent = invite.plan || '想认真邀请你，和我一起度过一个好天气。';
+        $('whenText').textContent = invite.when || '时间地点，我们一起决定';
+        $('summaryWhen').textContent = invite.when || '我们一起决定';
+        document.title = invite.to ? `给${invite.to}的一封小邀请` : '给你的一封小邀请';
+      }
+      render();
+
+      function openEditor() {
+        $('toInput').value = invite.to;
+        $('fromInput').value = invite.from;
+        $('planInput').value = invite.plan;
+        $('whenInput').value = invite.when;
+        $('generatedBox').classList.remove('show');
+        $('copyLink').hidden = true;
+        editDialog.showModal();
+      }
+      $('openEdit').addEventListener('click', openEditor);
+      $('openEditPlanner').addEventListener('click', openEditor);
+      document.querySelectorAll('[data-close]').forEach((button) => {
+        button.addEventListener('click', () => $(button.dataset.close).close());
+      });
+      [editDialog, declineDialog].forEach((dialog) => dialog.addEventListener('click', (event) => {
+        if (event.target === dialog) dialog.close();
+      }));
+
+      $('editForm').addEventListener('submit', (event) => {
+        event.preventDefault();
+        invite.to = $('toInput').value.trim();
+        invite.from = $('fromInput').value.trim();
+        invite.plan = $('planInput').value.trim();
+        invite.when = $('whenInput').value.trim();
+        render();
+        const box = $('generatedBox');
+        $('copyLink').hidden = true;
+        if (location.protocol !== 'https:' || ['localhost', '127.0.0.1', '::1'].includes(location.hostname)) {
+          box.innerHTML = '<strong>内容已预览</strong>先把这个网页发布到一个可公开访问的 HTTPS 地址，再从那个地址生成邀请链接；本地文件或预览地址无法在对方手机上打开。';
+          box.classList.add('show');
+          return;
+        }
+        const url = new URL(location.href);
+        url.search = '';
+        url.hash = '';
+        Object.entries(invite).forEach(([key, value]) => { if (value) url.searchParams.set(key, value); });
+        box.innerHTML = '';
+        const strong = document.createElement('strong');
+        strong.textContent = '专属链接已准备好';
+        const link = document.createElement('span');
+        link.textContent = url.href;
+        box.append(strong, link);
+        box.classList.add('show');
+        $('copyLink').hidden = false;
+        $('copyLink').textContent = '复制链接';
+        $('copyLink').dataset.url = url.href;
+      });
+
+      async function copyText(value) {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(value);
+          return;
+        }
+        const area = document.createElement('textarea');
+        area.value = value;
+        area.style.position = 'fixed'; area.style.opacity = '0';
+        document.body.append(area); area.select();
+        const copied = document.execCommand('copy');
+        area.remove();
+        if (!copied) throw new Error('clipboard unavailable');
+      }
+      $('copyLink').addEventListener('click', async () => {
+        try {
+          await copyText($('copyLink').dataset.url);
+          $('copyLink').textContent = '复制好了，去微信粘贴发送吧 ✓';
+        } catch {
+          $('copyLink').textContent = '请长按上方链接复制';
+        }
+      });
+
+      function makeChoiceGrid(containerId, items, selected, onSelect) {
+        const grid = $(containerId);
+        grid.replaceChildren();
+        items.forEach((item) => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = `choice-card${item.title === selected ? ' selected' : ''}`;
+          button.setAttribute('aria-pressed', String(item.title === selected));
+          const icon = document.createElement('span');
+          icon.className = 'choice-icon';
+          icon.setAttribute('aria-hidden', 'true');
+          icon.textContent = item.icon;
+          const copy = document.createElement('span');
+          copy.className = 'choice-copy';
+          const title = document.createElement('strong');
+          title.textContent = item.title;
+          const note = document.createElement('small');
+          note.textContent = item.note;
+          copy.append(title, note);
+          const check = document.createElement('span');
+          check.className = 'choice-check';
+          check.textContent = '✓';
+          button.append(icon, copy, check);
+          button.addEventListener('click', () => onSelect(item.title));
+          grid.append(button);
+        });
+      }
+
+      function renderActivities() {
+        const options = [...activities];
+        if (picks.activity && !options.some((item) => item.title === picks.activity)) {
+          options.unshift({ icon: '✨', title: picks.activity, note: '你的专属想法' });
+        }
+        makeChoiceGrid('activityGrid', options, picks.activity, (value) => {
+          picks.activity = value;
+          renderActivities();
+        });
+      }
+
+      function renderCuisines() {
+        makeChoiceGrid('cuisineGrid', cuisines, picks.cuisine, (value) => {
+          if (picks.cuisine !== value) picks.dish = '';
+          picks.cuisine = value;
+          renderCuisines();
+          renderDishes();
+        });
+      }
+
+      function renderDishes() {
+        const options = [...(dishes[picks.cuisine] || dishes['都听你的'])];
+        if (picks.dish && !options.some((item) => item.title === picks.dish)) {
+          options.unshift({ icon: '✨', title: picks.dish, note: '你的专属口味' });
+        }
+        $('dishSubtitle').textContent = picks.cuisine === '都听你的'
+          ? '选一种期待，也可以把安排交给对方。'
+          : `给这次${picks.cuisine || '晚餐'}再挑个细分类目。`;
+        $('dishCustom').placeholder = picks.cuisine === '都听你的' ? '或者写下你想要的惊喜' : '或者写下具体想吃的';
+        makeChoiceGrid('dishGrid', options, picks.dish, (value) => {
+          picks.dish = value;
+          renderDishes();
+        });
+      }
+
+      function renderSummary() {
+        $('summaryActivity').textContent = picks.activity || '还没选择';
+        $('summaryCuisine').textContent = picks.cuisine || '还没选择';
+        $('summaryDish').textContent = picks.dish || '还没选择';
+        $('summaryWhen').textContent = invite.when || '我们一起决定';
+      }
+
+      const stepNames = ['活动', '菜系', '口味', '确认'];
+      function goStep(nextStep) {
+        step = Math.max(0, Math.min(3, nextStep));
+        document.querySelectorAll('.planner-step').forEach((panel) => {
+          const active = Number(panel.dataset.step) === step;
+          panel.classList.toggle('active', active);
+          panel.setAttribute('aria-hidden', String(!active));
+        });
+        $('stepLabel').textContent = `STEP 0${step + 1} · ${stepNames[step]}`;
+        $('stepCounter').textContent = `0${step + 1} / 04`;
+        $('progressFill').style.width = `${(step + 1) * 25}%`;
+        $('toast').textContent = '';
+        if (step === 3) renderSummary();
+        if (step === 2) renderDishes();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      $('startPlan').addEventListener('click', () => {
+        inviteView.hidden = true;
+        plannerView.hidden = false;
+        renderActivities();
+        renderCuisines();
+        goStep(0);
+      });
+      document.querySelectorAll('[data-next]').forEach((button) => button.addEventListener('click', () => {
+        if (step === 0 && !picks.activity) { $('toast').textContent = '先挑一个你喜欢的活动吧，也可以写自己的想法。'; return; }
+        if (step === 1 && !picks.cuisine) { $('toast').textContent = '选一个今晚想吃的菜系吧。'; return; }
+        if (step === 2 && !picks.dish) { $('toast').textContent = '再选一个细分类目，或者写下你想吃的。'; return; }
+        goStep(step + 1);
+      }));
+      document.querySelectorAll('[data-back]').forEach((button) => button.addEventListener('click', () => {
+        if (step === 0) {
+          plannerView.hidden = true;
+          inviteView.hidden = false;
+          return;
+        }
+        goStep(step - 1);
+      }));
+      document.querySelectorAll('[data-jump]').forEach((button) => button.addEventListener('click', () => goStep(Number(button.dataset.jump))));
+      $('useActivityCustom').addEventListener('click', () => {
+        const value = $('activityCustom').value.trim();
+        if (!value) { $('toast').textContent = '写下你想做的活动，再点「用这个想法」。'; return; }
+        picks.activity = value;
+        renderActivities();
+        $('toast').textContent = '好主意，已经加进计划里啦。';
+      });
+      $('activityCustom').addEventListener('keydown', (event) => { if (event.key === 'Enter') $('useActivityCustom').click(); });
+      $('useDishCustom').addEventListener('click', () => {
+        const value = $('dishCustom').value.trim();
+        if (!value) { $('toast').textContent = '写下具体想吃的，再点「用这个想法」。'; return; }
+        picks.dish = value;
+        renderDishes();
+        $('toast').textContent = '好口味，已经加进计划里啦。';
+      });
+      $('dishCustom').addEventListener('keydown', (event) => { if (event.key === 'Enter') $('useDishCustom').click(); });
+      $('backToInvite').addEventListener('click', () => {
+        plannerView.hidden = true;
+        inviteView.hidden = false;
+      });
+      $('editWhen').addEventListener('click', openEditor);
+
+      const nudges = ['欸？拒绝键害羞地躲开了，再给我一次机会嘛', '请求重新发送中……我会认真安排约会的！', '最后再问一次，好不好嘛？'];
+      function addBouncyReject(buttonId, toastId, declineLinkId) {
+        $(buttonId).addEventListener('click', () => {
+          refusals += 1;
+          const x = refusals % 2 ? 44 : -44;
+          const y = refusals % 3 ? -7 : 7;
+          $(buttonId).style.transform = `translate(${x}px, ${y}px) rotate(${refusals % 2 ? 3 : -3}deg)`;
+          $(toastId).textContent = nudges[Math.min(refusals - 1, nudges.length - 1)];
+          if (refusals === 3) $(declineLinkId).textContent = '玩笑到此为止：认真告诉我你的答案';
+        });
+      }
+      addBouncyReject('noButtonCover', 'coverToast', 'declineLink');
+      addBouncyReject('noButton', 'toast', 'declineLinkPlanner');
+      $('declineLink').addEventListener('click', () => declineDialog.showModal());
+      $('declineLinkPlanner').addEventListener('click', () => declineDialog.showModal());
+      document.querySelectorAll('[data-decline]').forEach((button) => button.addEventListener('click', () => declineDialog.showModal()));
+
+      function showResult(accepted) {
+        inviteView.hidden = true;
+        plannerView.hidden = true;
+        resultView.classList.add('show');
+        $('resultMark').textContent = accepted ? '💗' : '🌷';
+        $('resultEyebrow').textContent = accepted ? '今晚的好消息' : '谢谢你认真告诉我';
+        $('resultTitle').textContent = accepted ? '太好啦！' : '收到你的答案';
+        $('resultText').textContent = accepted
+          ? `${invite.from || '发出邀请的人'}一定会很开心。你们可以${picks.activity}，晚餐选了${picks.cuisine} · ${picks.dish}。期待这次约会吧。`
+          : `${invite.from || '发出邀请的人'}会尊重你的想法。谢谢你坦诚告诉我，祝你今天也有好心情。`;
+        $('resultAction').textContent = accepted ? '复制回复，告诉对方 ♡' : '复制这段话，告诉对方';
+        $('resultFineprint').textContent = '这份邀请在你的手机里打开；复制后发给邀请你的人，就能告诉 TA 你的答案。';
+        $('resultAction').onclick = async () => {
+          const reply = accepted
+            ? `我答应啦！${invite.when ? `${invite.when}，` : ''}我们可以${picks.activity}，晚餐想吃${picks.cuisine}的${picks.dish}～`
+            : '谢谢你的邀请，不过这次我想认真拒绝。希望你能理解，也祝你一切顺利。';
+          try {
+            await copyText(reply);
+            $('resultAction').textContent = '复制好了，发给对方吧 ✓';
+          } catch {
+            $('resultAction').textContent = reply;
+          }
+        };
+        if (accepted) celebrate();
+      }
+      $('yesButton').addEventListener('click', () => showResult(true));
+      $('confirmDecline').addEventListener('click', () => {
+        declineDialog.close();
+        showResult(false);
+      });
+
+      function celebrate() {
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        const colors = ['#f17c8d', '#f7c56c', '#a9c9a8', '#c7a6da', '#ffb88c'];
+        for (let i = 0; i < 36; i += 1) {
+          const piece = document.createElement('i');
+          piece.className = 'confetti';
+          piece.style.left = `${Math.random() * 100}vw`;
+          piece.style.background = colors[i % colors.length];
+          piece.style.setProperty('--duration', `${2.1 + Math.random() * 1.8}s`);
+          piece.style.setProperty('--drift', `${Math.random() * 140 - 70}px`);
+          document.body.append(piece);
+          setTimeout(() => piece.remove(), 4200);
+        }
+      }
+    })();
+  </script>
+</body>
+</html>
