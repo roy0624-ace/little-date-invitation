@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#fff8f4">
-  <meta name="description" content="一份认真又有点可爱的约会邀请。">
-  <title>给你的一封小邀请</title>
+  <meta name="description" content="Would you be my special date? 一份认真又有点可爱的约会邀请。">
+  <title>Would you be my special date?</title>
   <style>
     :root {
       color-scheme: light;
@@ -46,11 +46,15 @@
       overflow: hidden;
       border: 1px solid rgba(255,255,255,.95);
       border-radius: 30px;
-      background: rgba(255,255,255,.88);
-      box-shadow: var(--shadow);
+      background: linear-gradient(145deg, rgba(255,255,255,.97), rgba(255,250,248,.92));
+      box-shadow: 0 2px 0 rgba(255,255,255,.95) inset, 0 10px 0 rgba(235,215,212,.48), 0 28px 68px rgba(110,67,75,.17);
       backdrop-filter: blur(16px);
+      transform-style: preserve-3d;
+      transform: perspective(1100px) rotateX(var(--card-rx, 0deg)) rotateY(var(--card-ry, 0deg));
+      transition: transform .34s cubic-bezier(.2,.8,.2,1), box-shadow .34s ease;
       animation: arrive .65s cubic-bezier(.2,.8,.2,1) both;
     }
+    .card::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: linear-gradient(125deg, rgba(255,255,255,.65), transparent 28%, transparent 72%, rgba(255,225,223,.16)); }
     .topline { display: flex; justify-content: space-between; align-items: center; }
     .brand { display: flex; align-items: center; gap: 8px; color: #ad8183; font-size: 11px; font-weight: 750; letter-spacing: .19em; }
     .brand-mark { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 9px; background: #fff0ed; color: var(--rose); font-size: 14px; letter-spacing: 0; }
@@ -60,23 +64,24 @@
       font-size: 12px; cursor: pointer; transition: background .2s, transform .2s;
     }
     .customize:hover { background: #ffebe7; transform: translateY(-1px); }
-    .illustration { height: 142px; display: grid; place-items: center; position: relative; margin: 13px 0 1px; }
-    .halo { position: absolute; width: 124px; height: 124px; border-radius: 50%; background: linear-gradient(145deg, #ffedf0, #fff6e8); }
-    .envelope { position: relative; display: grid; place-items: center; width: 112px; height: 83px; margin-top: 20px; border: 1px solid #f5d9d3; border-radius: 15px; background: linear-gradient(145deg, #fff 10%, #fff2ed); box-shadow: 0 12px 25px rgba(201, 129, 126, .16); transform: rotate(-5deg); }
+    .illustration { height: 142px; display: grid; place-items: center; position: relative; margin: 13px 0 1px; perspective: 700px; transform-style: preserve-3d; }
+    .halo { position: absolute; width: 124px; height: 124px; border-radius: 50%; background: linear-gradient(145deg, #ffedf0, #fff6e8); box-shadow: inset 0 7px 17px rgba(255,255,255,.85), 0 18px 26px rgba(223,160,157,.14); transform: translateZ(-8px); }
+    .envelope { position: relative; display: grid; place-items: center; width: 112px; height: 83px; margin-top: 20px; border: 1px solid #f5d9d3; border-radius: 15px; background: linear-gradient(145deg, #fff 10%, #fff2ed); box-shadow: inset 0 3px 0 white, 0 7px 0 #efcfca, 0 17px 27px rgba(201, 129, 126, .22); transform: translateZ(14px) rotate(-5deg); }
     .envelope::before { content: ""; position: absolute; top: -14px; left: 25px; width: 61px; height: 61px; border-radius: 9px 9px 2px 2px; background: linear-gradient(135deg, #ffdee2, #f5aeba); transform: rotate(45deg); z-index: -1; }
     .letter { position: absolute; top: -18px; z-index: 1; display: grid; place-items: center; width: 75px; height: 58px; border-radius: 9px; background: #fffdfa; box-shadow: 0 4px 10px rgba(154, 105, 104, .1); font-size: 25px; animation: float 3s ease-in-out infinite; }
     .heart { position: absolute; right: 57px; top: 16px; color: #e87989; font-size: 20px; animation: heartbeat 1.8s ease-in-out infinite; }
     .mini-star { position: absolute; left: 58px; bottom: 14px; color: #e6b765; font-size: 16px; }
-    .cat-sticker { position: absolute; z-index: 2; top: 38px; left: calc(50% - 105px); display: grid; place-items: center; width: 57px; height: 53px; border: 3px solid white; border-radius: 18px 18px 17px 17px; background: #fff0d8; box-shadow: 0 7px 16px rgba(141, 93, 83, .15); font-size: 31px; transform: rotate(-11deg); animation: cat-bob 2.6s ease-in-out infinite; }
+    .cat-sticker { position: absolute; z-index: 2; top: 38px; left: calc(50% - 105px); display: grid; place-items: center; width: 57px; height: 53px; border: 3px solid white; border-radius: 18px 18px 17px 17px; background: linear-gradient(145deg,#fff6e5,#ffe6c5); box-shadow: inset 0 2px 0 white, 0 4px 0 #edcfaa, 0 11px 18px rgba(141, 93, 83, .17); font-size: 31px; transform: translateZ(20px) rotate(-11deg); animation: cat-bob 2.6s ease-in-out infinite; }
     .cat-sticker::after { content: "♥"; position: absolute; right: -12px; top: -13px; color: #ef7487; font-size: 15px; animation: heartbeat 1.8s ease-in-out infinite; }
     .intro { text-align: center; }
     .eyebrow { margin: 0 0 10px; color: #b28b88; font-size: 11px; font-weight: 700; letter-spacing: .2em; }
     h1 { margin: 0; font-size: clamp(28px, 8vw, 36px); line-height: 1.32; letter-spacing: -.045em; font-weight: 780; }
+    h1.hero-title { font-size: clamp(29px, 8vw, 38px); line-height: 1.16; letter-spacing: -.035em; text-wrap: balance; }
     h1 .name { color: var(--rose-dark); }
     .subtitle { margin: 10px 0 0; color: var(--muted); font-size: 14px; line-height: 1.75; }
     .note {
       margin: 22px 0 19px; padding: 17px 17px 15px; border: 1px solid #f4e9e3;
-      border-radius: 18px; background: #fffaf7;
+      border-radius: 18px; background: linear-gradient(145deg,#fffdfa,#fff5f0); box-shadow: inset 0 2px 0 white, 0 4px 0 #f0e3df, 0 9px 16px rgba(111,76,75,.06);
     }
     .note-head { display: flex; align-items: center; gap: 7px; margin-bottom: 12px; color: #a87c76; font-size: 11px; font-weight: 750; letter-spacing: .1em; }
     .note-head span { color: #eaa278; font-size: 14px; }
@@ -85,19 +90,24 @@
     .question { margin: 0 0 13px; text-align: center; font-size: 14px; font-weight: 670; }
     .actions { display: grid; gap: 10px; }
     .yes {
-      min-height: 52px; width: 100%; border: 0; border-radius: 15px; color: white;
-      background: linear-gradient(100deg, #ef7e8c, #ec6f82); box-shadow: 0 8px 18px rgba(220, 103, 124, .24);
-      font-weight: 730; cursor: pointer; transition: transform .18s, box-shadow .18s;
+      position: relative; overflow: hidden; min-height: 52px; width: 100%; border: 1px solid rgba(255,255,255,.45); border-radius: 15px; color: white;
+      background: linear-gradient(135deg, #f38b9c 0%, #ee7187 56%, #e9647c 100%); box-shadow: inset 0 2px 0 rgba(255,255,255,.4), 0 5px 0 #cf526c, 0 10px 20px rgba(220,103,124,.26);
+      font-weight: 730; cursor: pointer; transition: transform .2s cubic-bezier(.2,.8,.2,1), box-shadow .2s, filter .2s;
     }
-    .yes:hover { transform: translateY(-2px); box-shadow: 0 11px 23px rgba(220, 103, 124, .28); }
-    .yes:active { transform: scale(.985); }
-    .yes.bump { transform: scale(var(--yes-scale, 1)); transition: transform .28s cubic-bezier(.2,.8,.2,1); }
+    .yes::before { content: ""; position: absolute; top: -55%; left: -30%; width: 34%; height: 220%; transform: rotate(24deg); background: linear-gradient(90deg, transparent, rgba(255,255,255,.32), transparent); transition: left .55s ease; pointer-events: none; }
+    .yes:hover { transform: translateY(-3px); box-shadow: inset 0 2px 0 rgba(255,255,255,.48), 0 7px 0 #cf526c, 0 15px 25px rgba(220,103,124,.3); filter: saturate(1.06); }
+    .yes:hover::before { left: 110%; }
+    .yes:active { transform: translateY(3px) scale(.985); box-shadow: inset 0 2px 0 rgba(255,255,255,.28), 0 1px 0 #cf526c, 0 4px 8px rgba(220,103,124,.2); }
+    .yes.bump { transform: scale(var(--yes-scale, 1)); transition: transform .34s cubic-bezier(.2,.8,.2,1); }
     .no {
       display: block; min-height: 45px; width: min(100%, 240px); margin: 10px auto 0; justify-self: center; border: 1px solid #efe5e3;
-      border-radius: 14px; background: #fff; color: #887c80; font-size: 13px; cursor: pointer;
-      transition: transform .26s cubic-bezier(.2,.8,.2,1), background .2s, color .2s;
+      border-radius: 14px; background: linear-gradient(180deg,#fff,#fffaf9); color: #887c80; font-size: 13px; cursor: pointer;
+      box-shadow: inset 0 2px 0 #fff, 0 3px 0 #e9dedd, 0 7px 13px rgba(105,78,82,.08);
+      transition: transform .26s cubic-bezier(.2,.8,.2,1), background .2s, color .2s, box-shadow .2s;
     }
-    .no:hover { background: #fff7f5; color: #785f65; }
+    .no:hover { background: linear-gradient(180deg,#fff8f6,#ffefeb); color: #785f65; box-shadow: inset 0 2px 0 #fff, 0 4px 0 #e7d3d1, 0 10px 17px rgba(105,78,82,.12); }
+    .no:active { transform: translateY(2px) scale(.98) !important; box-shadow: 0 1px 0 #e9dedd, 0 3px 6px rgba(105,78,82,.08); }
+    .no.no-boop { animation: reject-wobble .54s cubic-bezier(.2,.8,.2,1); }
     .decline-link { display: block; margin: 12px auto 0; padding: 5px; border: 0; background: transparent; color: #a09195; font-size: 11px; text-decoration: underline; text-decoration-color: #d9c9cc; text-underline-offset: 3px; cursor: pointer; }
     .toast { min-height: 23px; margin: 7px 0 0; text-align: center; color: #cb7180; font-size: 12px; }
     .toast.ping { animation: toast-pop .28s cubic-bezier(.2,.8,.2,1); }
@@ -147,10 +157,12 @@
     .planner-step { display: none; animation: arrive .26s ease both; }
     .planner-step.active { display: block; }
     .choice-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 9px; }
-    .choice-card { min-height: 77px; display: flex; align-items: center; gap: 9px; position: relative; padding: 11px 10px; text-align: left; border: 1px solid #f0e6e2; border-radius: 15px; background: #fff; color: var(--ink); cursor: pointer; transition: transform .16s, border-color .16s, background .16s, box-shadow .16s; }
-    .choice-card:hover { transform: translateY(-2px); border-color: #f2c6c2; }
-    .choice-card.selected { border-color: #eb8993; background: #fff5f3; box-shadow: 0 0 0 2px rgba(235,137,147,.12); animation: choose-pop .27s cubic-bezier(.2,.8,.2,1); }
-    .choice-icon { flex: 0 0 31px; display: grid; place-items: center; width: 31px; height: 31px; border-radius: 10px; background: #fff2ed; font-size: 17px; }
+    .choice-card { min-height: 77px; display: flex; align-items: center; gap: 9px; position: relative; padding: 11px 10px; text-align: left; border: 1px solid #f0e6e2; border-radius: 15px; background: linear-gradient(145deg,#fff,#fffaf8); color: var(--ink); cursor: pointer; box-shadow: inset 0 2px 0 white, 0 3px 0 #eee2df, 0 7px 13px rgba(111,76,75,.06); transition: transform .18s cubic-bezier(.2,.8,.2,1), border-color .16s, background .16s, box-shadow .16s; }
+    .choice-card:hover { transform: translateY(-3px) rotateX(2deg); border-color: #f2c6c2; box-shadow: inset 0 2px 0 white, 0 6px 0 #eee2df, 0 12px 17px rgba(111,76,75,.1); }
+    .choice-card:active { transform: translateY(2px) scale(.98); box-shadow: 0 1px 0 #eee2df, 0 3px 7px rgba(111,76,75,.07); }
+    .choice-card.selected { border-color: #eb8993; background: linear-gradient(145deg,#fff9f7,#ffefed); box-shadow: inset 0 2px 0 white, 0 4px 0 #e9b9b8, 0 10px 17px rgba(235,137,147,.18); animation: choose-pop .33s cubic-bezier(.2,.8,.2,1); }
+    .choice-icon { flex: 0 0 31px; display: grid; place-items: center; width: 31px; height: 31px; border-radius: 10px; background: linear-gradient(145deg,#fff8f4,#ffe8e0); box-shadow: inset 0 2px 0 white, 0 2px 0 #f1d9d3; font-size: 17px; transition: transform .25s cubic-bezier(.2,.8,.2,1); }
+    .choice-card.selected .choice-icon { transform: translateY(-2px) rotate(-8deg) scale(1.08); }
     .choice-copy { min-width: 0; display: grid; gap: 3px; }
     .choice-copy strong { font-size: 12px; line-height: 1.3; }
     .choice-copy small { color: #9b8c8e; font-size: 10px; line-height: 1.3; }
@@ -177,14 +189,15 @@
     .back-to-invite { display: block; margin: 14px auto 0; padding: 5px; border: 0; background: transparent; color: #9b898e; font-size: 11px; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
     .confetti { position: fixed; z-index: 5; top: -18px; width: 9px; height: 13px; border-radius: 3px; pointer-events: none; animation: fall var(--duration) linear forwards; }
     .tap-heart { position: fixed; z-index: 9; pointer-events: none; color: var(--heart-color, #ed8090); font-size: var(--heart-size, 16px); animation: heart-fly .74s cubic-bezier(.15,.75,.25,1) forwards; }
-    @keyframes arrive { from { opacity: 0; transform: translateY(12px) scale(.985); } to { opacity: 1; transform: none; } }
+    @keyframes arrive { from { opacity: 0; translate: 0 12px; scale: .985; } to { opacity: 1; translate: 0 0; scale: 1; } }
     @keyframes float { 0%,100% { transform: translateY(0) rotate(1deg); } 50% { transform: translateY(-5px) rotate(-1deg); } }
     @keyframes heartbeat { 0%,100% { transform: scale(1); } 12% { transform: scale(1.18); } 24% { transform: scale(1); } 36% { transform: scale(1.13); } }
     @keyframes twinkle { 0%,100% { opacity: .48; transform: scale(.9) rotate(-7deg); } 50% { opacity: 1; transform: scale(1.13) rotate(8deg); } }
     @keyframes pop { from { opacity: 0; transform: scale(.45) rotate(-15deg); } to { opacity: 1; transform: scale(1) rotate(0); } }
     @keyframes cat-bob { 0%,100% { transform: translateY(0) rotate(-4deg); } 45% { transform: translateY(-5px) rotate(5deg); } 70% { transform: translateY(-2px) rotate(-2deg); } }
     @keyframes toast-pop { from { opacity: .2; transform: translateY(5px) scale(.96); } to { opacity: 1; transform: none; } }
-    @keyframes choose-pop { 0% { transform: scale(.96); } 68% { transform: scale(1.035); } 100% { transform: scale(1); } }
+    @keyframes choose-pop { 0% { transform: translateY(2px) scale(.94); } 58% { transform: translateY(-3px) scale(1.045); } 100% { transform: translateY(-1px) scale(1); } }
+    @keyframes reject-wobble { 0%,100% { rotate: 0deg; } 20% { rotate: -7deg; } 42% { rotate: 7deg; } 64% { rotate: -4deg; } 82% { rotate: 3deg; } }
     @keyframes heart-fly { 0% { opacity: 0; transform: translate3d(0, 0, 0) scale(.5) rotate(0); } 20% { opacity: 1; } 100% { opacity: 0; transform: translate3d(var(--dx), var(--dy), 0) scale(1.25) rotate(var(--rot)); } }
     @keyframes fall { to { transform: translate3d(var(--drift), 110svh, 0) rotate(700deg); opacity: .85; } }
     @media (max-width: 390px) { .card { padding: 24px 19px 21px; border-radius: 25px; } .illustration { height: 126px; margin-top: 10px; } .note { margin-top: 19px; } .choice-card { min-height: 73px; gap: 7px; padding: 9px 8px; } .choice-icon { flex-basis: 28px; width: 28px; height: 28px; font-size: 15px; } }
@@ -200,7 +213,7 @@
     <section class="card" aria-live="polite">
       <div id="inviteView">
         <div class="topline">
-          <div class="brand"><span class="brand-mark">♡</span> A LITTLE DATE</div>
+          <div class="brand"><span class="brand-mark">♡</span> SPECIAL DATE</div>
           <button class="customize" id="openEdit" type="button" aria-label="定制邀请内容">✎ <span>定制邀请</span></button>
         </div>
         <div class="illustration" aria-hidden="true">
@@ -209,9 +222,9 @@
           <span class="heart">♥</span><span class="mini-star">✦</span>
         </div>
         <div class="intro">
-          <p class="eyebrow">一场由你参与策划的小约会</p>
-          <h1><span id="toName" class="name">亲爱的你</span><br>来一起选约会计划吧？</h1>
-          <p class="subtitle">去哪儿、吃什么都可以慢慢挑<br>我最期待的是和你一起。</p>
+          <p class="eyebrow">ONE LITTLE QUESTION FOR YOU</p>
+          <h1 class="hero-title">Would you be my<br><span class="name">special date?</span></h1>
+          <p class="subtitle">亲爱的 <span id="toName">你</span><br>想和你一起把普通的一天，过成特别的一天。</p>
         </div>
         <div class="cover-note">
           <div class="note-head"><span>✦</span> TA 的小心意</div>
@@ -223,12 +236,12 @@
         <button class="no" id="noButtonCover" type="button">拒绝</button>
         <p class="toast" id="coverToast" aria-live="polite"></p>
         <button class="decline-link" id="declineLink" type="button">如果不方便，也可以认真告诉我</button>
-        <p class="footer">MADE WITH A LITTLE COURAGE & A LOT OF HEART</p>
+        <p class="footer">A LITTLE NOTE, A LOT OF HEART</p>
       </div>
 
       <div id="plannerView" class="planner" hidden>
         <div class="topline">
-          <div class="brand"><span class="brand-mark">♡</span> OUR DATE PLAN</div>
+          <div class="brand"><span class="brand-mark">♡</span> SPECIAL DATE PLAN</div>
           <button class="customize" id="openEditPlanner" type="button">✎ <span>邀请信息</span></button>
         </div>
         <div class="planner-head">
@@ -335,6 +348,21 @@
       let step = 0;
       let refusals = 0;
 
+      const card = document.querySelector('.card');
+      if (matchMedia('(hover: hover) and (pointer: fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        card.addEventListener('pointermove', (event) => {
+          const rect = card.getBoundingClientRect();
+          const x = (event.clientX - rect.left) / rect.width - .5;
+          const y = (event.clientY - rect.top) / rect.height - .5;
+          card.style.setProperty('--card-rx', `${-y * 2.4}deg`);
+          card.style.setProperty('--card-ry', `${x * 3}deg`);
+        });
+        card.addEventListener('pointerleave', () => {
+          card.style.setProperty('--card-rx', '0deg');
+          card.style.setProperty('--card-ry', '0deg');
+        });
+      }
+
       const activities = [
         { icon: '☕', title: '咖啡店坐坐', note: '找家舒服的小店' },
         { icon: '🎬', title: '一起看电影', note: '选一部喜欢的片' },
@@ -420,7 +448,7 @@
         $('planText').textContent = invite.plan || '想认真邀请你，和我一起度过一个好天气。';
         $('whenText').textContent = invite.when || '时间地点，我们一起决定';
         $('summaryWhen').textContent = invite.when || '我们一起决定';
-        document.title = invite.to ? `给${invite.to}的一封小邀请` : '给你的一封小邀请';
+        document.title = invite.to ? `Would you be my special date, ${invite.to}?` : 'Would you be my special date?';
       }
       render();
 
@@ -678,16 +706,31 @@
       });
       $('editWhen').addEventListener('click', openEditor);
 
-      const nudges = ['欸？拒绝键害羞地躲开了，再给我一次机会嘛 🐾', '拒绝键又躲起来啦……我会认真安排的！', '最后再问一次嘛？不方便也可以点下面认真告诉我。'];
+      const nudges = [
+        '欸？小猫把拒绝键藏起来啦，再给我一次机会嘛 🐾',
+        '再考虑三秒钟好不好？我会认真安排的🥺',
+        '咖啡和晚餐都听你的……还不心动一点点吗？☕',
+        '我把今天的好运都分给你，点一下答应嘛✨',
+        '小猫已经叼着爱心来求情啦，再想想嘛🐱',
+        '我会把行程完全按你喜欢的安排，再给我一次机会嘛💗',
+        '被拒绝好多次了……给我一张候补约会券好不好？',
+        '最后最后一小次求情：愿意让我陪你度过一天吗？'
+      ];
+      const rejectLabels = ['等一下嘛🥺', '再考虑一下嘛', '我会认真安排的！', '猫猫也来求情了🐱', '行程都听你的嘛', '再给我一次小机会💗', '最后一次求情啦', '好啦，认真听你说'];
       function addBouncyReject(buttonId, toastId, declineLinkId) {
         $(buttonId).addEventListener('click', () => {
           refusals += 1;
-          const x = refusals % 2 ? 44 : -44;
-          const y = refusals % 3 ? -7 : 7;
+          const x = refusals % 2 ? 42 + Math.min(refusals, 4) * 3 : -42 - Math.min(refusals, 4) * 3;
+          const y = refusals % 3 ? -8 : 8;
           const button = $(buttonId);
+          button.textContent = rejectLabels[Math.min(refusals - 1, rejectLabels.length - 1)];
           button.style.transform = `translate(${x}px, ${y}px) rotate(${refusals % 2 ? 4 : -4}deg)`;
+          button.classList.remove('no-boop');
+          void button.offsetWidth;
+          button.classList.add('no-boop');
           popHearts(button, 3);
-          setToast(toastId, nudges[Math.min(refusals - 1, nudges.length - 1)]);
+          const plea = nudges[Math.min(refusals - 1, nudges.length - 1)];
+          setToast(toastId, refusals > nudges.length ? `${plea}（第 ${refusals} 次小声求情）` : plea);
           const yesButton = $(buttonId === 'noButtonCover' ? 'startPlan' : 'yesButton');
           yesButton.style.setProperty('--yes-scale', Math.min(1.15, 1 + refusals * 0.035));
           yesButton.classList.add('bump');
