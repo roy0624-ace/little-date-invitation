@@ -444,7 +444,7 @@
       };
 
       function render() {
-        $('toName').textContent = invite.to ? `亲爱的 ${invite.to}` : '亲爱的你';
+        $('toName').textContent = invite.to || '你';
         $('planText').textContent = invite.plan || '想认真邀请你，和我一起度过一个好天气。';
         $('whenText').textContent = invite.when || '时间地点，我们一起决定';
         $('summaryWhen').textContent = invite.when || '我们一起决定';
