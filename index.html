@@ -279,7 +279,7 @@
 
         <section class="planner-step" data-step="3" aria-labelledby="reviewTitle">
           <h2 id="reviewTitle" class="step-title">这就是我们的约会计划</h2>
-          <p class="step-subtitle">计划可以再改；点答应后会自动复制回复，去微信粘贴发送。</p>
+          <p class="step-subtitle">计划可以再改；点答应后会复制回复，并尝试关闭页面返回微信对话框。</p>
           <div class="plan-summary">
             <div class="summary-row"><span class="summary-label">约会活动</span><span id="summaryActivity" class="summary-value"></span><button class="summary-edit" type="button" data-jump="0">修改</button></div>
             <div class="summary-row"><span class="summary-label">晚餐菜系</span><span id="summaryCuisine" class="summary-value"></span><button class="summary-edit" type="button" data-jump="1">修改</button></div>
@@ -288,7 +288,7 @@
           </div>
           <p class="review-question">那么，愿意和我约会吗？</p>
           <div class="review-actions">
-            <button class="yes" id="yesButton" type="button">答应并复制回复给 TA ♡</button>
+            <button class="yes" id="yesButton" type="button">一键复制并返回微信 ↗</button>
             <button class="no" id="noButton" type="button">拒绝</button>
           </div>
           <button class="decline-link" id="declineLinkPlanner" type="button">如果不方便，也可以认真告诉我</button>
@@ -649,7 +649,7 @@
           '嘿嘿，先来挑一个你喜欢的活动吧～',
           '咖啡后吃什么？来选今晚的菜系～',
           '最后挑个细分类目，这顿饭就有着落啦。',
-          '计划卡做好啦。点答应会自动复制回复，去微信粘贴发送。'
+          '计划卡做好啦。点按钮会复制回复，并尝试返回微信对话框。'
         ][step]);
         if (step === 3) renderSummary();
         if (step === 2) renderDishes();
@@ -751,6 +751,28 @@
         return '谢谢你的邀请，不过这次我想认真拒绝。希望你能理解，也祝你一切顺利。';
       }
 
+      function tryReturnToChat() {
+        let bridgeCalled = false;
+        try {
+          if (window.WeixinJSBridge && typeof window.WeixinJSBridge.call === 'function') {
+            window.WeixinJSBridge.call('closeWindow');
+            bridgeCalled = true;
+          }
+        } catch {}
+        if (!bridgeCalled) {
+          document.addEventListener('WeixinJSBridgeReady', () => {
+            try { window.WeixinJSBridge.call('closeWindow'); } catch {}
+          }, { once: true });
+          try { window.close(); } catch {}
+        }
+        window.setTimeout(() => {
+          if (!window.closed && resultView.classList.contains('show')) {
+            $('resultFineprint').textContent = '回复已复制。若页面没有自动关闭，请点左上角返回微信对话框，再粘贴发送。';
+          }
+        }, 650);
+        return bridgeCalled;
+      }
+
       function showResult(accepted, method, reply) {
         inviteView.hidden = true;
         plannerView.hidden = true;
@@ -759,14 +781,18 @@
         $('resultEyebrow').textContent = accepted ? '今晚的好消息' : '谢谢你认真告诉我';
         $('resultTitle').textContent = accepted ? '太好啦！' : '收到你的答案';
         $('resultText').textContent = accepted
-          ? `${invite.from || '发出邀请的人'}一定会很开心。你们可以${picks.activity}，晚餐选了${picks.cuisine} · ${picks.dish}。${method === 'copied' ? '回复已复制，打开微信粘贴发送就好。' : `请长按复制这段回复：${reply}`}`
-          : `${invite.from || '发出邀请的人'}会尊重你的想法。谢谢你坦诚告诉我，祝你今天也有好心情。${method === 'copied' ? '回复已复制，打开微信粘贴发送就好。' : `请长按复制这段回复：${reply}`}`;
-        $('resultAction').textContent = method === 'copied' ? '再次复制这条回复' : '复制回复';
+          ? `${invite.from || '发出邀请的人'}一定会很开心。你们可以${picks.activity}，晚餐选了${picks.cuisine} · ${picks.dish}。${method === 'copied' ? '回复已复制，正在返回微信对话框。' : `请长按复制这段回复：${reply}`}`
+          : `${invite.from || '发出邀请的人'}会尊重你的想法。谢谢你坦诚告诉我，祝你今天也有好心情。${method === 'copied' ? '回复已复制，正在返回微信对话框。' : `请长按复制这段回复：${reply}`}`;
+        $('resultAction').textContent = method === 'copied' ? '再复制并尝试返回微信 ↗' : '复制回复并返回微信';
         $('resultFineprint').textContent = method === 'copied'
-          ? '回复已放进剪贴板，切到微信粘贴并发送即可。'
+          ? '若页面没有自动关闭，请点左上角返回微信对话框，再粘贴发送。'
           : '如果自动复制不可用，可以长按上方回复文字复制。';
         $('resultAction').onclick = async () => {
-          try { await copyText(reply); $('resultAction').textContent = '复制好了，去微信粘贴发送 ✓'; }
+          try {
+            await copyText(reply);
+            $('resultAction').textContent = '复制好了，正在返回微信…';
+            tryReturnToChat();
+          }
           catch { $('resultText').textContent += ` ${reply}`; }
         };
         if (accepted) celebrate();
@@ -776,6 +802,7 @@
         try {
           await copyText(reply);
           showResult(accepted, 'copied', reply);
+          tryReturnToChat();
         } catch {
           showResult(accepted, 'manual', reply);
         }
