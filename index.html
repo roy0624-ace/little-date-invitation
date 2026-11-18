@@ -279,7 +279,7 @@
 
         <section class="planner-step" data-step="3" aria-labelledby="reviewTitle">
           <h2 id="reviewTitle" class="step-title">这就是我们的约会计划</h2>
-          <p class="step-subtitle">计划可以再改；点答应后，一键呼出手机分享面板。</p>
+          <p class="step-subtitle">计划可以再改；点答应后会自动复制回复，去微信粘贴发送。</p>
           <div class="plan-summary">
             <div class="summary-row"><span class="summary-label">约会活动</span><span id="summaryActivity" class="summary-value"></span><button class="summary-edit" type="button" data-jump="0">修改</button></div>
             <div class="summary-row"><span class="summary-label">晚餐菜系</span><span id="summaryCuisine" class="summary-value"></span><button class="summary-edit" type="button" data-jump="1">修改</button></div>
@@ -288,7 +288,7 @@
           </div>
           <p class="review-question">那么，愿意和我约会吗？</p>
           <div class="review-actions">
-            <button class="yes" id="yesButton" type="button">答应并一键回复给 TA ↗</button>
+            <button class="yes" id="yesButton" type="button">答应并复制回复给 TA ♡</button>
             <button class="no" id="noButton" type="button">拒绝</button>
           </div>
           <button class="decline-link" id="declineLinkPlanner" type="button">如果不方便，也可以认真告诉我</button>
@@ -649,7 +649,7 @@
           '嘿嘿，先来挑一个你喜欢的活动吧～',
           '咖啡后吃什么？来选今晚的菜系～',
           '最后挑个细分类目，这顿饭就有着落啦。',
-          '计划卡做好啦。点答应会一键呼出手机分享面板。'
+          '计划卡做好啦。点答应会自动复制回复，去微信粘贴发送。'
         ][step]);
         if (step === 3) renderSummary();
         if (step === 2) renderDishes();
@@ -759,24 +759,13 @@
         $('resultEyebrow').textContent = accepted ? '今晚的好消息' : '谢谢你认真告诉我';
         $('resultTitle').textContent = accepted ? '太好啦！' : '收到你的答案';
         $('resultText').textContent = accepted
-          ? `${invite.from || '发出邀请的人'}一定会很开心。你们可以${picks.activity}，晚餐选了${picks.cuisine} · ${picks.dish}。${method === 'share' ? '手机分享面板已打开，选微信对话并发送这份回复吧。' : method === 'copied' ? '回复已复制，切到微信粘贴发送就好。' : `回复内容：${reply}`}`
-          : `${invite.from || '发出邀请的人'}会尊重你的想法。谢谢你坦诚告诉我，祝你今天也有好心情。${method === 'share' ? '手机分享面板已打开，选微信对话并发送这份回复吧。' : method === 'copied' ? '回复已复制，切到微信粘贴发送就好。' : `回复内容：${reply}`}`;
-        $('resultAction').textContent = method === 'share' ? '再打开分享面板 ↗' : method === 'copied' ? '再次复制这条回复' : '复制回复';
-        $('resultFineprint').textContent = method === 'share'
-          ? '分享面板会让你选择目标应用和聊天对象；网页无法替你选联系人并直接发送。'
-          : method === 'copied'
-            ? '回复已放进剪贴板，切到微信粘贴并发送即可。'
-            : '回复文字显示在上方；如果复制不可用，可以长按文字复制。';
+          ? `${invite.from || '发出邀请的人'}一定会很开心。你们可以${picks.activity}，晚餐选了${picks.cuisine} · ${picks.dish}。${method === 'copied' ? '回复已复制，打开微信粘贴发送就好。' : `请长按复制这段回复：${reply}`}`
+          : `${invite.from || '发出邀请的人'}会尊重你的想法。谢谢你坦诚告诉我，祝你今天也有好心情。${method === 'copied' ? '回复已复制，打开微信粘贴发送就好。' : `请长按复制这段回复：${reply}`}`;
+        $('resultAction').textContent = method === 'copied' ? '再次复制这条回复' : '复制回复';
+        $('resultFineprint').textContent = method === 'copied'
+          ? '回复已放进剪贴板，切到微信粘贴并发送即可。'
+          : '如果自动复制不可用，可以长按上方回复文字复制。';
         $('resultAction').onclick = async () => {
-          if (method === 'share' && navigator.share && window.isSecureContext) {
-            try {
-              await navigator.share({ title: accepted ? '我答应啦！' : '约会邀请回复', text: reply });
-              $('resultAction').textContent = '分享面板已打开 ✓';
-              return;
-            } catch (error) {
-              if (error.name === 'AbortError') return;
-            }
-          }
           try { await copyText(reply); $('resultAction').textContent = '复制好了，去微信粘贴发送 ✓'; }
           catch { $('resultText').textContent += ` ${reply}`; }
         };
@@ -784,18 +773,6 @@
       }
       async function sendReply(accepted) {
         const reply = makeReply(accepted);
-        if (navigator.share && window.isSecureContext) {
-          try {
-            await navigator.share({ title: accepted ? '我答应啦！' : '约会邀请回复', text: reply });
-            showResult(accepted, 'share', reply);
-            return;
-          } catch (error) {
-            if (error.name === 'AbortError') {
-              setToast(plannerView.hidden ? 'coverToast' : 'toast', '分享已取消。想好了再点答应或认真拒绝就好。');
-              return;
-            }
-          }
-        }
         try {
           await copyText(reply);
           showResult(accepted, 'copied', reply);
