@@ -28,8 +28,9 @@
       color: var(--ink);
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
       background:
-        radial-gradient(ellipse at 12% 14%, rgba(255, 219, 220, .65), transparent 34%),
-        radial-gradient(ellipse at 89% 82%, rgba(255, 228, 198, .7), transparent 31%),
+        radial-gradient(ellipse at 12% 14%, rgba(255, 219, 220, .75), transparent 34%),
+        radial-gradient(ellipse at 89% 82%, rgba(255, 228, 198, .78), transparent 31%),
+        radial-gradient(ellipse at 88% 12%, rgba(232, 223, 255, .4), transparent 27%),
         #fff8f4;
     }
     button, input { font: inherit; }
@@ -66,6 +67,8 @@
     .letter { position: absolute; top: -18px; z-index: 1; display: grid; place-items: center; width: 75px; height: 58px; border-radius: 9px; background: #fffdfa; box-shadow: 0 4px 10px rgba(154, 105, 104, .1); font-size: 25px; animation: float 3s ease-in-out infinite; }
     .heart { position: absolute; right: 57px; top: 16px; color: #e87989; font-size: 20px; animation: heartbeat 1.8s ease-in-out infinite; }
     .mini-star { position: absolute; left: 58px; bottom: 14px; color: #e6b765; font-size: 16px; }
+    .cat-sticker { position: absolute; z-index: 2; top: 38px; left: calc(50% - 105px); display: grid; place-items: center; width: 57px; height: 53px; border: 3px solid white; border-radius: 18px 18px 17px 17px; background: #fff0d8; box-shadow: 0 7px 16px rgba(141, 93, 83, .15); font-size: 31px; transform: rotate(-11deg); animation: cat-bob 2.6s ease-in-out infinite; }
+    .cat-sticker::after { content: "♥"; position: absolute; right: -12px; top: -13px; color: #ef7487; font-size: 15px; animation: heartbeat 1.8s ease-in-out infinite; }
     .intro { text-align: center; }
     .eyebrow { margin: 0 0 10px; color: #b28b88; font-size: 11px; font-weight: 700; letter-spacing: .2em; }
     h1 { margin: 0; font-size: clamp(28px, 8vw, 36px); line-height: 1.32; letter-spacing: -.045em; font-weight: 780; }
@@ -88,6 +91,7 @@
     }
     .yes:hover { transform: translateY(-2px); box-shadow: 0 11px 23px rgba(220, 103, 124, .28); }
     .yes:active { transform: scale(.985); }
+    .yes.bump { transform: scale(var(--yes-scale, 1)); transition: transform .28s cubic-bezier(.2,.8,.2,1); }
     .no {
       display: block; min-height: 45px; width: min(100%, 240px); margin: 10px auto 0; justify-self: center; border: 1px solid #efe5e3;
       border-radius: 14px; background: #fff; color: #887c80; font-size: 13px; cursor: pointer;
@@ -96,6 +100,7 @@
     .no:hover { background: #fff7f5; color: #785f65; }
     .decline-link { display: block; margin: 12px auto 0; padding: 5px; border: 0; background: transparent; color: #a09195; font-size: 11px; text-decoration: underline; text-decoration-color: #d9c9cc; text-underline-offset: 3px; cursor: pointer; }
     .toast { min-height: 23px; margin: 7px 0 0; text-align: center; color: #cb7180; font-size: 12px; }
+    .toast.ping { animation: toast-pop .28s cubic-bezier(.2,.8,.2,1); }
     .footer { margin: 17px 0 0; text-align: center; color: #b2a2a4; font-size: 10px; letter-spacing: .04em; }
     .result { display: none; padding: 34px 4px 20px; text-align: center; animation: arrive .4s ease both; }
     .result.show { display: block; }
@@ -129,6 +134,11 @@
     .teaser-chip { padding: 7px 10px; border: 1px solid #f0e4e0; border-radius: 999px; color: #927c7e; background: white; font-size: 11px; }
     .planner { margin-top: 2px; animation: arrive .35s ease both; }
     .planner-head { margin: 21px 0 19px; }
+    .guide-row { display: flex; align-items: center; gap: 10px; margin: -6px 0 12px; padding: 10px 12px; border: 1px solid #f5e9e6; border-radius: 16px; background: linear-gradient(105deg, #fff8f5, #fffdfb); }
+    .guide-cat { flex: 0 0 38px; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 13px; background: #fff0d8; font-size: 23px; }
+    .guide-cat.boop { animation: cat-bob .55s cubic-bezier(.2,.8,.2,1); }
+    .guide-row p { margin: 0; color: #8d7277; font-size: 11px; font-weight: 650; line-height: 1.5; }
+    .guide-heart { margin-left: auto; color: #ee8c98; animation: heartbeat 1.8s ease-in-out infinite; }
     .step-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; color: #ad8986; font-size: 10px; font-weight: 750; letter-spacing: .13em; }
     .progress-track { height: 5px; overflow: hidden; border-radius: 999px; background: #f8e9e5; }
     .progress-fill { width: 25%; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #f2a0a2, #ec7184); transition: width .35s ease; }
@@ -139,13 +149,14 @@
     .choice-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 9px; }
     .choice-card { min-height: 77px; display: flex; align-items: center; gap: 9px; position: relative; padding: 11px 10px; text-align: left; border: 1px solid #f0e6e2; border-radius: 15px; background: #fff; color: var(--ink); cursor: pointer; transition: transform .16s, border-color .16s, background .16s, box-shadow .16s; }
     .choice-card:hover { transform: translateY(-2px); border-color: #f2c6c2; }
-    .choice-card.selected { border-color: #eb8993; background: #fff5f3; box-shadow: 0 0 0 2px rgba(235,137,147,.12); }
+    .choice-card.selected { border-color: #eb8993; background: #fff5f3; box-shadow: 0 0 0 2px rgba(235,137,147,.12); animation: choose-pop .27s cubic-bezier(.2,.8,.2,1); }
     .choice-icon { flex: 0 0 31px; display: grid; place-items: center; width: 31px; height: 31px; border-radius: 10px; background: #fff2ed; font-size: 17px; }
     .choice-copy { min-width: 0; display: grid; gap: 3px; }
     .choice-copy strong { font-size: 12px; line-height: 1.3; }
     .choice-copy small { color: #9b8c8e; font-size: 10px; line-height: 1.3; }
     .choice-check { position: absolute; top: 6px; right: 8px; color: var(--rose-dark); font-size: 12px; opacity: 0; }
     .choice-card.selected .choice-check { opacity: 1; }
+    .choice-card.selected::after { content: "选好啦"; position: absolute; right: 8px; bottom: 6px; color: #c17880; font-size: 8px; font-weight: 700; }
     .custom-choice { display: flex; gap: 8px; margin-top: 11px; }
     .custom-choice input { min-width: 0; min-height: 43px; font-size: 12px; }
     .custom-choice button { flex: 0 0 auto; padding: 0 12px; border: 1px solid #f0e2df; border-radius: 12px; background: #fff8f5; color: #956c73; font-size: 12px; cursor: pointer; }
@@ -160,14 +171,21 @@
     .summary-edit { padding: 5px 7px; border: 0; border-radius: 8px; background: #fff; color: #a0787d; font-size: 10px; cursor: pointer; }
     .review-question { margin: 16px 0 11px; text-align: center; font-size: 13px; font-weight: 700; }
     .review-actions { display: grid; gap: 9px; }
+    .review-actions .yes { transform: scale(var(--yes-scale, 1)); transition: transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .18s; }
+    .review-actions .yes:hover { transform: translateY(-2px) scale(var(--yes-scale, 1)); }
     .review-actions .no { width: min(100%, 240px); min-height: 44px; justify-self: center; }
     .back-to-invite { display: block; margin: 14px auto 0; padding: 5px; border: 0; background: transparent; color: #9b898e; font-size: 11px; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
     .confetti { position: fixed; z-index: 5; top: -18px; width: 9px; height: 13px; border-radius: 3px; pointer-events: none; animation: fall var(--duration) linear forwards; }
+    .tap-heart { position: fixed; z-index: 9; pointer-events: none; color: var(--heart-color, #ed8090); font-size: var(--heart-size, 16px); animation: heart-fly .74s cubic-bezier(.15,.75,.25,1) forwards; }
     @keyframes arrive { from { opacity: 0; transform: translateY(12px) scale(.985); } to { opacity: 1; transform: none; } }
     @keyframes float { 0%,100% { transform: translateY(0) rotate(1deg); } 50% { transform: translateY(-5px) rotate(-1deg); } }
     @keyframes heartbeat { 0%,100% { transform: scale(1); } 12% { transform: scale(1.18); } 24% { transform: scale(1); } 36% { transform: scale(1.13); } }
     @keyframes twinkle { 0%,100% { opacity: .48; transform: scale(.9) rotate(-7deg); } 50% { opacity: 1; transform: scale(1.13) rotate(8deg); } }
     @keyframes pop { from { opacity: 0; transform: scale(.45) rotate(-15deg); } to { opacity: 1; transform: scale(1) rotate(0); } }
+    @keyframes cat-bob { 0%,100% { transform: translateY(0) rotate(-4deg); } 45% { transform: translateY(-5px) rotate(5deg); } 70% { transform: translateY(-2px) rotate(-2deg); } }
+    @keyframes toast-pop { from { opacity: .2; transform: translateY(5px) scale(.96); } to { opacity: 1; transform: none; } }
+    @keyframes choose-pop { 0% { transform: scale(.96); } 68% { transform: scale(1.035); } 100% { transform: scale(1); } }
+    @keyframes heart-fly { 0% { opacity: 0; transform: translate3d(0, 0, 0) scale(.5) rotate(0); } 20% { opacity: 1; } 100% { opacity: 0; transform: translate3d(var(--dx), var(--dy), 0) scale(1.25) rotate(var(--rot)); } }
     @keyframes fall { to { transform: translate3d(var(--drift), 110svh, 0) rotate(700deg); opacity: .85; } }
     @media (max-width: 390px) { .card { padding: 24px 19px 21px; border-radius: 25px; } .illustration { height: 126px; margin-top: 10px; } .note { margin-top: 19px; } .choice-card { min-height: 73px; gap: 7px; padding: 9px 8px; } .choice-icon { flex-basis: 28px; width: 28px; height: 28px; font-size: 15px; } }
     @media (max-height: 790px) { body { align-items: start; } .scene { margin-top: 14px; margin-bottom: 14px; } }
@@ -187,6 +205,7 @@
         </div>
         <div class="illustration" aria-hidden="true">
           <div class="halo"></div><div class="envelope"><div class="letter">💌</div></div>
+          <div class="cat-sticker">🐱</div>
           <span class="heart">♥</span><span class="mini-star">✦</span>
         </div>
         <div class="intro">
@@ -200,7 +219,7 @@
           <div class="when"><span aria-hidden="true">◷</span><span id="whenText">时间地点，我们一起决定</span></div>
           <div class="teaser-picks"><span class="teaser-chip">☕ 约会活动你来选</span><span class="teaser-chip">🍽️ 晚餐口味也你定</span></div>
         </div>
-        <button class="yes" id="startPlan" type="button">开始挑选约会计划 ♡</button>
+        <button class="yes" id="startPlan" type="button">一起策划约会 ♡</button>
         <button class="no" id="noButtonCover" type="button">拒绝</button>
         <p class="toast" id="coverToast" aria-live="polite"></p>
         <button class="decline-link" id="declineLink" type="button">如果不方便，也可以认真告诉我</button>
@@ -216,6 +235,7 @@
           <div class="step-meta"><span id="stepLabel">STEP 01 · 活动</span><span id="stepCounter">01 / 04</span></div>
           <div class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
         </div>
+        <div class="guide-row"><span id="guideCat" class="guide-cat" aria-hidden="true">🐱</span><p id="guideText">嘿嘿，先来挑一个你喜欢的活动吧～</p><span class="guide-heart" aria-hidden="true">♥</span></div>
         <p class="toast" id="toast" aria-live="polite"></p>
 
         <section class="planner-step active" data-step="0" aria-labelledby="activityTitle">
@@ -246,7 +266,7 @@
 
         <section class="planner-step" data-step="3" aria-labelledby="reviewTitle">
           <h2 id="reviewTitle" class="step-title">这就是我们的约会计划</h2>
-          <p class="step-subtitle">计划可以再改；你愿意和我一起去吗？</p>
+          <p class="step-subtitle">计划可以再改；点答应后，一键呼出手机分享面板。</p>
           <div class="plan-summary">
             <div class="summary-row"><span class="summary-label">约会活动</span><span id="summaryActivity" class="summary-value"></span><button class="summary-edit" type="button" data-jump="0">修改</button></div>
             <div class="summary-row"><span class="summary-label">晚餐菜系</span><span id="summaryCuisine" class="summary-value"></span><button class="summary-edit" type="button" data-jump="1">修改</button></div>
@@ -255,7 +275,7 @@
           </div>
           <p class="review-question">那么，愿意和我约会吗？</p>
           <div class="review-actions">
-            <button class="yes" id="yesButton" type="button">好呀，和你约会 ♡</button>
+            <button class="yes" id="yesButton" type="button">答应并一键回复给 TA ↗</button>
             <button class="no" id="noButton" type="button">拒绝</button>
           </div>
           <button class="decline-link" id="declineLinkPlanner" type="button">如果不方便，也可以认真告诉我</button>
@@ -465,6 +485,41 @@
         area.remove();
         if (!copied) throw new Error('clipboard unavailable');
       }
+      function setToast(id, message) {
+        const toast = $(id);
+        toast.textContent = message;
+        toast.classList.remove('ping');
+        void toast.offsetWidth;
+        toast.classList.add('ping');
+      }
+      function popHearts(origin, count = 4) {
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        const rect = origin.getBoundingClientRect();
+        const symbols = ['♥', '♡', '✦', '✧'];
+        const colors = ['#ec7184', '#f0b15f', '#b590d3', '#efa0a4'];
+        for (let i = 0; i < count; i += 1) {
+          const particle = document.createElement('span');
+          particle.className = 'tap-heart';
+          particle.setAttribute('aria-hidden', 'true');
+          particle.textContent = symbols[i % symbols.length];
+          particle.style.left = `${rect.left + rect.width / 2 + (Math.random() * 22 - 11)}px`;
+          particle.style.top = `${rect.top + rect.height / 2}px`;
+          particle.style.setProperty('--dx', `${Math.random() * 74 - 37}px`);
+          particle.style.setProperty('--dy', `${-24 - Math.random() * 48}px`);
+          particle.style.setProperty('--rot', `${Math.random() * 70 - 35}deg`);
+          particle.style.setProperty('--heart-color', colors[i % colors.length]);
+          particle.style.setProperty('--heart-size', `${12 + Math.random() * 9}px`);
+          document.body.append(particle);
+          setTimeout(() => particle.remove(), 850);
+        }
+      }
+      function setGuide(message) {
+        $('guideText').textContent = message;
+        const cat = $('guideCat');
+        cat.classList.remove('boop');
+        void cat.offsetWidth;
+        cat.classList.add('boop');
+      }
       $('copyLink').addEventListener('click', async () => {
         try {
           await copyText($('copyLink').dataset.url);
@@ -497,7 +552,10 @@
           check.className = 'choice-check';
           check.textContent = '✓';
           button.append(icon, copy, check);
-          button.addEventListener('click', () => onSelect(item.title));
+          button.addEventListener('click', () => {
+            popHearts(button);
+            onSelect(item.title);
+          });
           grid.append(button);
         });
       }
@@ -510,6 +568,7 @@
         makeChoiceGrid('activityGrid', options, picks.activity, (value) => {
           picks.activity = value;
           renderActivities();
+          setGuide(`好眼光！${value}听起来就很开心～`);
         });
       }
 
@@ -519,6 +578,7 @@
           picks.cuisine = value;
           renderCuisines();
           renderDishes();
+          setGuide(`${value}安排上啦，接下来挑一点喜欢的细分口味。`);
         });
       }
 
@@ -534,6 +594,7 @@
         makeChoiceGrid('dishGrid', options, picks.dish, (value) => {
           picks.dish = value;
           renderDishes();
+          setGuide(`记下来啦：${picks.cuisine} · ${value}。已经开始期待了！`);
         });
       }
 
@@ -556,12 +617,19 @@
         $('stepCounter').textContent = `0${step + 1} / 04`;
         $('progressFill').style.width = `${(step + 1) * 25}%`;
         $('toast').textContent = '';
+        setGuide([
+          '嘿嘿，先来挑一个你喜欢的活动吧～',
+          '咖啡后吃什么？来选今晚的菜系～',
+          '最后挑个细分类目，这顿饭就有着落啦。',
+          '计划卡做好啦。点答应会一键呼出手机分享面板。'
+        ][step]);
         if (step === 3) renderSummary();
         if (step === 2) renderDishes();
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
       $('startPlan').addEventListener('click', () => {
+        popHearts($('startPlan'), 6);
         inviteView.hidden = true;
         plannerView.hidden = false;
         renderActivities();
@@ -569,9 +637,10 @@
         goStep(0);
       });
       document.querySelectorAll('[data-next]').forEach((button) => button.addEventListener('click', () => {
-        if (step === 0 && !picks.activity) { $('toast').textContent = '先挑一个你喜欢的活动吧，也可以写自己的想法。'; return; }
-        if (step === 1 && !picks.cuisine) { $('toast').textContent = '选一个今晚想吃的菜系吧。'; return; }
-        if (step === 2 && !picks.dish) { $('toast').textContent = '再选一个细分类目，或者写下你想吃的。'; return; }
+        if (step === 0 && !picks.activity) { setToast('toast', '先挑一个你喜欢的活动吧，也可以写自己的想法。'); return; }
+        if (step === 1 && !picks.cuisine) { setToast('toast', '选一个今晚想吃的菜系吧。'); return; }
+        if (step === 2 && !picks.dish) { setToast('toast', '再选一个细分类目，或者写下你想吃的。'); return; }
+        popHearts(button, 3);
         goStep(step + 1);
       }));
       document.querySelectorAll('[data-back]').forEach((button) => button.addEventListener('click', () => {
@@ -585,18 +654,22 @@
       document.querySelectorAll('[data-jump]').forEach((button) => button.addEventListener('click', () => goStep(Number(button.dataset.jump))));
       $('useActivityCustom').addEventListener('click', () => {
         const value = $('activityCustom').value.trim();
-        if (!value) { $('toast').textContent = '写下你想做的活动，再点「用这个想法」。'; return; }
+        if (!value) { setToast('toast', '写下你想做的活动，再点「用这个想法」。'); return; }
         picks.activity = value;
         renderActivities();
-        $('toast').textContent = '好主意，已经加进计划里啦。';
+        popHearts($('useActivityCustom'));
+        setToast('toast', '好主意，已经加进计划里啦。');
+        setGuide(`你亲自想的「${value}」，听起来最特别！`);
       });
       $('activityCustom').addEventListener('keydown', (event) => { if (event.key === 'Enter') $('useActivityCustom').click(); });
       $('useDishCustom').addEventListener('click', () => {
         const value = $('dishCustom').value.trim();
-        if (!value) { $('toast').textContent = '写下具体想吃的，再点「用这个想法」。'; return; }
+        if (!value) { setToast('toast', '写下具体想吃的，再点「用这个想法」。'); return; }
         picks.dish = value;
         renderDishes();
-        $('toast').textContent = '好口味，已经加进计划里啦。';
+        popHearts($('useDishCustom'));
+        setToast('toast', '好口味，已经加进计划里啦。');
+        setGuide(`记下你的专属口味：${value}。`);
       });
       $('dishCustom').addEventListener('keydown', (event) => { if (event.key === 'Enter') $('useDishCustom').click(); });
       $('backToInvite').addEventListener('click', () => {
@@ -605,15 +678,23 @@
       });
       $('editWhen').addEventListener('click', openEditor);
 
-      const nudges = ['欸？拒绝键害羞地躲开了，再给我一次机会嘛', '请求重新发送中……我会认真安排约会的！', '最后再问一次，好不好嘛？'];
+      const nudges = ['欸？拒绝键害羞地躲开了，再给我一次机会嘛 🐾', '拒绝键又躲起来啦……我会认真安排的！', '最后再问一次嘛？不方便也可以点下面认真告诉我。'];
       function addBouncyReject(buttonId, toastId, declineLinkId) {
         $(buttonId).addEventListener('click', () => {
           refusals += 1;
           const x = refusals % 2 ? 44 : -44;
           const y = refusals % 3 ? -7 : 7;
-          $(buttonId).style.transform = `translate(${x}px, ${y}px) rotate(${refusals % 2 ? 3 : -3}deg)`;
-          $(toastId).textContent = nudges[Math.min(refusals - 1, nudges.length - 1)];
-          if (refusals === 3) $(declineLinkId).textContent = '玩笑到此为止：认真告诉我你的答案';
+          const button = $(buttonId);
+          button.style.transform = `translate(${x}px, ${y}px) rotate(${refusals % 2 ? 4 : -4}deg)`;
+          popHearts(button, 3);
+          setToast(toastId, nudges[Math.min(refusals - 1, nudges.length - 1)]);
+          const yesButton = $(buttonId === 'noButtonCover' ? 'startPlan' : 'yesButton');
+          yesButton.style.setProperty('--yes-scale', Math.min(1.15, 1 + refusals * 0.035));
+          yesButton.classList.add('bump');
+          if (refusals === 3) {
+            $('declineLink').textContent = '玩笑到此为止：认真告诉我你的答案';
+            $('declineLinkPlanner').textContent = '玩笑到此为止：认真告诉我你的答案';
+          }
         });
       }
       addBouncyReject('noButtonCover', 'coverToast', 'declineLink');
@@ -622,7 +703,12 @@
       $('declineLinkPlanner').addEventListener('click', () => declineDialog.showModal());
       document.querySelectorAll('[data-decline]').forEach((button) => button.addEventListener('click', () => declineDialog.showModal()));
 
-      function showResult(accepted) {
+      function makeReply(accepted) {
+        if (accepted) return `我答应啦！${invite.when ? `${invite.when}，` : ''}我们可以${picks.activity}，晚餐想吃${picks.cuisine}的${picks.dish}～`;
+        return '谢谢你的邀请，不过这次我想认真拒绝。希望你能理解，也祝你一切顺利。';
+      }
+
+      function showResult(accepted, method, reply) {
         inviteView.hidden = true;
         plannerView.hidden = true;
         resultView.classList.add('show');
@@ -630,27 +716,54 @@
         $('resultEyebrow').textContent = accepted ? '今晚的好消息' : '谢谢你认真告诉我';
         $('resultTitle').textContent = accepted ? '太好啦！' : '收到你的答案';
         $('resultText').textContent = accepted
-          ? `${invite.from || '发出邀请的人'}一定会很开心。你们可以${picks.activity}，晚餐选了${picks.cuisine} · ${picks.dish}。期待这次约会吧。`
-          : `${invite.from || '发出邀请的人'}会尊重你的想法。谢谢你坦诚告诉我，祝你今天也有好心情。`;
-        $('resultAction').textContent = accepted ? '复制回复，告诉对方 ♡' : '复制这段话，告诉对方';
-        $('resultFineprint').textContent = '这份邀请在你的手机里打开；复制后发给邀请你的人，就能告诉 TA 你的答案。';
+          ? `${invite.from || '发出邀请的人'}一定会很开心。你们可以${picks.activity}，晚餐选了${picks.cuisine} · ${picks.dish}。${method === 'share' ? '手机分享面板已打开，选微信对话并发送这份回复吧。' : method === 'copied' ? '回复已复制，切到微信粘贴发送就好。' : `回复内容：${reply}`}`
+          : `${invite.from || '发出邀请的人'}会尊重你的想法。谢谢你坦诚告诉我，祝你今天也有好心情。${method === 'share' ? '手机分享面板已打开，选微信对话并发送这份回复吧。' : method === 'copied' ? '回复已复制，切到微信粘贴发送就好。' : `回复内容：${reply}`}`;
+        $('resultAction').textContent = method === 'share' ? '再打开分享面板 ↗' : method === 'copied' ? '再次复制这条回复' : '复制回复';
+        $('resultFineprint').textContent = method === 'share'
+          ? '分享面板会让你选择目标应用和聊天对象；网页无法替你选联系人并直接发送。'
+          : method === 'copied'
+            ? '回复已放进剪贴板，切到微信粘贴并发送即可。'
+            : '回复文字显示在上方；如果复制不可用，可以长按文字复制。';
         $('resultAction').onclick = async () => {
-          const reply = accepted
-            ? `我答应啦！${invite.when ? `${invite.when}，` : ''}我们可以${picks.activity}，晚餐想吃${picks.cuisine}的${picks.dish}～`
-            : '谢谢你的邀请，不过这次我想认真拒绝。希望你能理解，也祝你一切顺利。';
-          try {
-            await copyText(reply);
-            $('resultAction').textContent = '复制好了，发给对方吧 ✓';
-          } catch {
-            $('resultAction').textContent = reply;
+          if (method === 'share' && navigator.share && window.isSecureContext) {
+            try {
+              await navigator.share({ title: accepted ? '我答应啦！' : '约会邀请回复', text: reply });
+              $('resultAction').textContent = '分享面板已打开 ✓';
+              return;
+            } catch (error) {
+              if (error.name === 'AbortError') return;
+            }
           }
+          try { await copyText(reply); $('resultAction').textContent = '复制好了，去微信粘贴发送 ✓'; }
+          catch { $('resultText').textContent += ` ${reply}`; }
         };
         if (accepted) celebrate();
       }
-      $('yesButton').addEventListener('click', () => showResult(true));
+      async function sendReply(accepted) {
+        const reply = makeReply(accepted);
+        if (navigator.share && window.isSecureContext) {
+          try {
+            await navigator.share({ title: accepted ? '我答应啦！' : '约会邀请回复', text: reply });
+            showResult(accepted, 'share', reply);
+            return;
+          } catch (error) {
+            if (error.name === 'AbortError') {
+              setToast(plannerView.hidden ? 'coverToast' : 'toast', '分享已取消。想好了再点答应或认真拒绝就好。');
+              return;
+            }
+          }
+        }
+        try {
+          await copyText(reply);
+          showResult(accepted, 'copied', reply);
+        } catch {
+          showResult(accepted, 'manual', reply);
+        }
+      }
+      $('yesButton').addEventListener('click', () => sendReply(true));
       $('confirmDecline').addEventListener('click', () => {
         declineDialog.close();
-        showResult(false);
+        sendReply(false);
       });
 
       function celebrate() {
