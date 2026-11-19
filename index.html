@@ -151,7 +151,7 @@
     .guide-heart { margin-left: auto; color: #ee8c98; animation: heartbeat 1.8s ease-in-out infinite; }
     .step-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; color: #ad8986; font-size: 10px; font-weight: 750; letter-spacing: .13em; }
     .progress-track { height: 5px; overflow: hidden; border-radius: 999px; background: #f8e9e5; }
-    .progress-fill { width: 25%; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #f2a0a2, #ec7184); transition: width .35s ease; }
+    .progress-fill { width: 20%; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #f2a0a2, #ec7184); transition: width .35s ease; }
     .step-title { margin: 0; font-size: 24px; line-height: 1.3; letter-spacing: -.04em; }
     .step-subtitle { margin: 7px 0 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
     .planner-step { display: none; animation: arrive .26s ease both; }
@@ -172,6 +172,10 @@
     .custom-choice { display: flex; gap: 8px; margin-top: 11px; }
     .custom-choice input { min-width: 0; min-height: 43px; font-size: 12px; }
     .custom-choice button { flex: 0 0 auto; padding: 0 12px; border: 1px solid #f0e2df; border-radius: 12px; background: #fff8f5; color: #956c73; font-size: 12px; cursor: pointer; }
+    .schedule-fields { display: grid; grid-template-columns: 1.15fr .85fr; gap: 10px; margin-top: 17px; }
+    .schedule-fields label { margin-top: 0; }
+    .schedule-fields input { min-width: 0; padding: 0 9px; color: #725e62; background: linear-gradient(145deg,#fff,#fff8f5); box-shadow: inset 0 2px 0 white, 0 3px 0 #eee2df; }
+    .schedule-hint { margin: 12px 0 0; color: #ad8986; font-size: 11px; text-align: center; }
     .step-nav { display: flex; gap: 9px; margin-top: 17px; }
     .step-nav .secondary, .step-nav .yes { min-height: 48px; margin: 0; }
     .step-nav .secondary { flex: 0 0 37%; width: auto; }
@@ -181,7 +185,8 @@
     .summary-label { color: #a38481; font-size: 11px; font-weight: 700; }
     .summary-value { font-size: 12px; font-weight: 650; line-height: 1.5; }
     .summary-edit { padding: 5px 7px; border: 0; border-radius: 8px; background: #fff; color: #a0787d; font-size: 10px; cursor: pointer; }
-    .review-question { margin: 16px 0 11px; text-align: center; font-size: 13px; font-weight: 700; }
+    .review-question { margin: 16px 0 11px; text-align: center; color: #ba6876; font-size: 14px; font-weight: 760; line-height: 1.65; }
+    .review-question span { color: #897b80; font-size: 12px; font-weight: 620; }
     .review-actions { display: grid; gap: 9px; }
     .review-actions .yes { transform: scale(var(--yes-scale, 1)); transition: transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .18s; }
     .review-actions .yes:hover { transform: translateY(-2px) scale(var(--yes-scale, 1)); }
@@ -245,7 +250,7 @@
           <button class="customize" id="openEditPlanner" type="button">✎ <span>邀请信息</span></button>
         </div>
         <div class="planner-head">
-          <div class="step-meta"><span id="stepLabel">STEP 01 · 活动</span><span id="stepCounter">01 / 04</span></div>
+          <div class="step-meta"><span id="stepLabel">STEP 01 · 活动</span><span id="stepCounter">01 / 05</span></div>
           <div class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
         </div>
         <div class="guide-row"><span id="guideCat" class="guide-cat" aria-hidden="true">🐱</span><p id="guideText">嘿嘿，先来挑一个你喜欢的活动吧～</p><span class="guide-heart" aria-hidden="true">♥</span></div>
@@ -277,16 +282,30 @@
           <button class="decline-link" data-decline type="button">如果不方便，也可以认真告诉我</button>
         </section>
 
-        <section class="planner-step" data-step="3" aria-labelledby="reviewTitle">
+        <section class="planner-step" data-step="3" aria-labelledby="scheduleTitle">
+          <h2 id="scheduleTitle" class="step-title">所以，你什么时间有空？</h2>
+          <p class="step-subtitle">挑一个方便的日期和时间，我会准时来接你。</p>
+          <div class="schedule-fields">
+            <div><label for="dateInput">约会日期</label><input id="dateInput" type="date" required></div>
+            <div><label for="timeInput">约会时间</label><input id="timeInput" type="time" required></div>
+          </div>
+          <p class="schedule-hint">选好晚餐，再把见面的时间也定下来吧 ✨</p>
+          <div class="step-nav"><button class="secondary" data-back type="button">← 上一步</button><button class="yes" data-next type="button">看看完整计划 →</button></div>
+          <button class="decline-link" data-decline type="button">如果不方便，也可以认真告诉我</button>
+        </section>
+
+        <section class="planner-step" data-step="4" aria-labelledby="reviewTitle">
           <h2 id="reviewTitle" class="step-title">这就是我们的约会计划</h2>
           <p class="step-subtitle">计划可以再改；点答应后会复制回复，并尝试关闭页面返回微信对话框。</p>
           <div class="plan-summary">
             <div class="summary-row"><span class="summary-label">约会活动</span><span id="summaryActivity" class="summary-value"></span><button class="summary-edit" type="button" data-jump="0">修改</button></div>
             <div class="summary-row"><span class="summary-label">晚餐菜系</span><span id="summaryCuisine" class="summary-value"></span><button class="summary-edit" type="button" data-jump="1">修改</button></div>
             <div class="summary-row"><span class="summary-label">具体口味</span><span id="summaryDish" class="summary-value"></span><button class="summary-edit" type="button" data-jump="2">修改</button></div>
-            <div class="summary-row" id="summaryWhenRow"><span class="summary-label">时间备注</span><span id="summaryWhen" class="summary-value"></span><button class="summary-edit" type="button" id="editWhen">修改</button></div>
+            <div class="summary-row"><span class="summary-label">约会日期</span><span id="summaryDate" class="summary-value"></span><button class="summary-edit" type="button" data-jump="3">修改</button></div>
+            <div class="summary-row"><span class="summary-label">约会时间</span><span id="summaryTime" class="summary-value"></span><button class="summary-edit" type="button" data-jump="3">修改</button></div>
+            <div class="summary-row" id="summaryWhenRow"><span class="summary-label">邀请备注</span><span id="summaryWhen" class="summary-value"></span><button class="summary-edit" type="button" id="editWhen">修改</button></div>
           </div>
-          <p class="review-question">那么，愿意和我约会吗？</p>
+          <p class="review-question">真开心你没有拒绝！<br><span>我会准时来接你的。</span></p>
           <div class="review-actions">
             <button class="yes" id="yesButton" type="button">一键复制并返回微信 ↗</button>
             <button class="no" id="noButton" type="button">拒绝</button>
@@ -344,11 +363,15 @@
       const inviteView = $('inviteView');
       const plannerView = $('plannerView');
       const resultView = $('resultView');
-      const picks = { activity: '', cuisine: '', dish: '' };
+      const picks = { activity: '', cuisine: '', dish: '', date: '', time: '' };
       let step = 0;
       let refusals = 0;
 
       const card = document.querySelector('.card');
+      const today = new Date();
+      $('dateInput').min = [today.getFullYear(), String(today.getMonth() + 1).padStart(2, '0'), String(today.getDate()).padStart(2, '0')].join('-');
+      $('dateInput').addEventListener('input', () => { picks.date = $('dateInput').value; });
+      $('timeInput').addEventListener('input', () => { picks.time = $('timeInput').value; });
       if (matchMedia('(hover: hover) and (pointer: fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
         card.addEventListener('pointermove', (event) => {
           const rect = card.getBoundingClientRect();
@@ -447,7 +470,7 @@
         $('toName').textContent = invite.to || '你';
         $('planText').textContent = invite.plan || '想认真邀请你，和我一起度过一个好天气。';
         $('whenText').textContent = invite.when || '时间地点，我们一起决定';
-        $('summaryWhen').textContent = invite.when || '我们一起决定';
+        $('summaryWhen').textContent = invite.when || '没有补充备注';
         document.title = invite.to ? `Would you be my special date, ${invite.to}?` : 'Would you be my special date?';
       }
       render();
@@ -630,28 +653,37 @@
         $('summaryActivity').textContent = picks.activity || '还没选择';
         $('summaryCuisine').textContent = picks.cuisine || '还没选择';
         $('summaryDish').textContent = picks.dish || '还没选择';
-        $('summaryWhen').textContent = invite.when || '我们一起决定';
+        $('summaryDate').textContent = formatDate(picks.date) || '还没选择';
+        $('summaryTime').textContent = picks.time || '还没选择';
+        $('summaryWhen').textContent = invite.when || '没有补充备注';
       }
 
-      const stepNames = ['活动', '菜系', '口味', '确认'];
+      function formatDate(value) {
+        if (!value) return '';
+        const [year, month, day] = value.split('-');
+        return `${year}年${Number(month)}月${Number(day)}日`;
+      }
+
+      const stepNames = ['活动', '菜系', '口味', '日期时间', '确认'];
       function goStep(nextStep) {
-        step = Math.max(0, Math.min(3, nextStep));
+        step = Math.max(0, Math.min(4, nextStep));
         document.querySelectorAll('.planner-step').forEach((panel) => {
           const active = Number(panel.dataset.step) === step;
           panel.classList.toggle('active', active);
           panel.setAttribute('aria-hidden', String(!active));
         });
         $('stepLabel').textContent = `STEP 0${step + 1} · ${stepNames[step]}`;
-        $('stepCounter').textContent = `0${step + 1} / 04`;
-        $('progressFill').style.width = `${(step + 1) * 25}%`;
+        $('stepCounter').textContent = `0${step + 1} / 05`;
+        $('progressFill').style.width = `${(step + 1) * 20}%`;
         $('toast').textContent = '';
         setGuide([
           '嘿嘿，先来挑一个你喜欢的活动吧～',
           '咖啡后吃什么？来选今晚的菜系～',
           '最后挑个细分类目，这顿饭就有着落啦。',
-          '计划卡做好啦。点按钮会复制回复，并尝试返回微信对话框。'
+          '所以，你什么时间有空？挑一个日期和时间吧。',
+          '全部安排好啦，看看我们约会的完整计划。'
         ][step]);
-        if (step === 3) renderSummary();
+        if (step === 4) renderSummary();
         if (step === 2) renderDishes();
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
@@ -668,6 +700,9 @@
         if (step === 0 && !picks.activity) { setToast('toast', '先挑一个你喜欢的活动吧，也可以写自己的想法。'); return; }
         if (step === 1 && !picks.cuisine) { setToast('toast', '选一个今晚想吃的菜系吧。'); return; }
         if (step === 2 && !picks.dish) { setToast('toast', '再选一个细分类目，或者写下你想吃的。'); return; }
+        if (step === 3 && (!$('dateInput').value || !$('timeInput').value)) { setToast('toast', '选好你方便的日期和时间，我们就可以确认计划啦。'); return; }
+        if (step === 3 && $('dateInput').validity.rangeUnderflow) { setToast('toast', '约会日期从今天开始选哦。'); return; }
+        if (step === 3) { picks.date = $('dateInput').value; picks.time = $('timeInput').value; }
         popHearts(button, 3);
         goStep(step + 1);
       }));
@@ -747,7 +782,7 @@
       document.querySelectorAll('[data-decline]').forEach((button) => button.addEventListener('click', () => declineDialog.showModal()));
 
       function makeReply(accepted) {
-        if (accepted) return `我答应啦！${invite.when ? `${invite.when}，` : ''}我们可以${picks.activity}，晚餐想吃${picks.cuisine}的${picks.dish}～`;
+        if (accepted) return `我答应啦！我们约在${formatDate(picks.date)} ${picks.time}，一起${picks.activity}，晚餐选${picks.cuisine} · ${picks.dish}。${invite.when ? `备注：${invite.when}` : ''}`;
         return '谢谢你的邀请，不过这次我想认真拒绝。希望你能理解，也祝你一切顺利。';
       }
 
@@ -781,7 +816,7 @@
         $('resultEyebrow').textContent = accepted ? '今晚的好消息' : '谢谢你认真告诉我';
         $('resultTitle').textContent = accepted ? '太好啦！' : '收到你的答案';
         $('resultText').textContent = accepted
-          ? `${invite.from || '发出邀请的人'}一定会很开心。你们可以${picks.activity}，晚餐选了${picks.cuisine} · ${picks.dish}。${method === 'copied' ? '回复已复制，正在返回微信对话框。' : `请长按复制这段回复：${reply}`}`
+          ? `真开心你没有拒绝！我会准时来接你的。约会安排：${formatDate(picks.date)} ${picks.time}，${picks.activity}；晚餐${picks.cuisine} · ${picks.dish}。${method === 'copied' ? '回复已复制，正在返回微信对话框。' : `请长按复制这段回复：${reply}`}`
           : `${invite.from || '发出邀请的人'}会尊重你的想法。谢谢你坦诚告诉我，祝你今天也有好心情。${method === 'copied' ? '回复已复制，正在返回微信对话框。' : `请长按复制这段回复：${reply}`}`;
         $('resultAction').textContent = method === 'copied' ? '再复制并尝试返回微信 ↗' : '复制回复并返回微信';
         $('resultFineprint').textContent = method === 'copied'
