@@ -142,6 +142,14 @@
     .cover-note .plan { font-size: 14px; }
     .teaser-picks { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
     .teaser-chip { padding: 7px 10px; border: 1px solid #f0e4e0; border-radius: 999px; color: #927c7e; background: white; font-size: 11px; }
+    .music-dock { margin: 0 0 18px; padding: 11px 12px 8px; border: 1px solid #f2e2df; border-radius: 18px; background: linear-gradient(145deg,#fffaf8,#fff2ef); box-shadow: inset 0 2px 0 white, 0 4px 0 #efdfdc, 0 10px 18px rgba(111,76,75,.07); }
+    .music-heading { display: flex; align-items: center; gap: 9px; margin-bottom: 8px; }
+    .music-mark { flex: 0 0 31px; display: grid; place-items: center; width: 31px; height: 31px; border-radius: 11px; color: #c86e7e; background: linear-gradient(145deg,#ffe9eb,#fff5ed); box-shadow: inset 0 2px 0 white, 0 2px 0 #f1d7d4; font-size: 17px; }
+    .music-copy { display: grid; gap: 2px; }
+    .music-copy strong { color: #6e535a; font-size: 12px; }
+    .music-copy small { color: #a1878b; font-size: 10px; }
+    .music-hint { margin-left: auto; color: #ae8b8d; font-size: 9px; }
+    .netease-player { display: block; width: 100%; height: 86px; border: 0; border-radius: 12px; background: #fff; }
     .planner { margin-top: 2px; animation: arrive .35s ease both; }
     .planner-head { margin: 21px 0 19px; }
     .guide-row { display: flex; align-items: center; gap: 10px; margin: -6px 0 12px; padding: 10px 12px; border: 1px solid #f5e9e6; border-radius: 16px; background: linear-gradient(105deg, #fff8f5, #fffdfb); }
@@ -216,6 +224,10 @@
     <span class="sparkle two" aria-hidden="true">✧</span>
     <span class="sparkle three" aria-hidden="true">✦</span>
     <section class="card" aria-live="polite">
+      <div class="music-dock" id="musicDock">
+        <div class="music-heading"><span class="music-mark" aria-hidden="true">♫</span><span class="music-copy"><strong>If December Never Ends</strong><small>网易云音乐 · 点播放听歌</small></span><span class="music-hint">整首播放</span></div>
+        <iframe class="netease-player" title="网易云音乐：If December Never Ends" src="https://music.163.com/outchain/player?type=2&amp;id=2099495525&amp;auto=0&amp;height=66" width="100%" height="86" frameborder="0" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay"></iframe>
+      </div>
       <div id="inviteView">
         <div class="topline">
           <div class="brand"><span class="brand-mark">♡</span> SPECIAL DATE</div>
